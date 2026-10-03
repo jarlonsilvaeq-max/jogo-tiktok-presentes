@@ -1,9 +1,14 @@
 {
   "name": "jogo-presentes-tiktok",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "private": true,
   "type": "commonjs",
-  "scripts": { "start": "node server.js" },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "piratetok-live-js": "^0.1.0",
     "ws": "^8.18.0"

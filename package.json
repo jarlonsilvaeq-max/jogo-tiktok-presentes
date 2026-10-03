@@ -1,1 +1,11 @@
-{"name":"jogo-presentes-tiktok","version":"3.0.0","private":true,"scripts":{"start":"node server.js"},"dependencies":{"tiktok-live-connector":"^2.5.0","ws":"^8.18.0"}}
+{
+  "name": "jogo-presentes-tiktok",
+  "version": "4.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": { "start": "node server.js" },
+  "dependencies": {
+    "piratetok-live-js": "^0.1.0",
+    "ws": "^8.18.0"
+  }
+}

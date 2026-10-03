@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Duelo de Presentes — TikTok LIVE</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#0e1015;color:#fff;font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center}.game{width:min(1000px,94vw);text-align:center}.status{font-size:13px;opacity:.65;margin-bottom:14px}h1{font-size:clamp(26px,5vw,46px);margin:0 0 8px}.sub{opacity:.7;margin:0 0 26px}.bar{height:90px;border-radius:18px;overflow:hidden;display:flex;background:#292c33;box-shadow:0 10px 35px #0008}.side{height:100%;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:800;font-size:clamp(17px,3vw,30px);transition:width .35s;min-width:0}.red{background:#d71920}.blue{background:#1769e0}.gift{width:52px;height:52px;object-fit:contain}.giftFallback{width:58px;height:58px;border-radius:14px;background:#252832;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;flex:none}.cards{display:flex;gap:14px;justify-content:center;margin:22px auto 0;flex-wrap:wrap}.card{width:310px;background:#181b21;border-radius:15px;padding:14px}.mini{display:flex;justify-content:center;gap:18px;min-height:84px}.miniItem{display:flex;flex-direction:column;align-items:center;gap:5px}.card img{width:58px;height:58px;object-fit:contain}.card b{display:block;margin-bottom:8px}.card small{opacity:.7;line-height:1.45}.coin{font-size:11px;opacity:.6}.reset{margin-top:18px;border:0;border-radius:10px;padding:12px 18px;background:#292c34;color:#fff;font-weight:bold}.log{margin-top:15px;font-size:12px;opacity:.55}
+</style></head>
+<body><div class="game">
+<div id="status" class="status">Aguardando conexão com o servidor…</div>
+<h1>Quem você escolheria?</h1><p class="sub">Presentes da LIVE viram votos pelo valor em moedas.</p>
+<div class="bar">
+<div id="l" class="side red" style="width:50%"><img id="li" class="gift" src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp" onerror="fallbackImg(this,'🌹')"><span>Lula 50%</span></div>
+<div id="f" class="side blue" style="width:50%"><div id="fi" class="giftFallback">GG</div><span>Flávio Bolsonaro 50%</span></div>
+</div>
+<div class="cards">
+<div class="card"><b>🔴 Lula</b><div class="mini">
+<div class="miniItem"><img id="cardL1" class="gift" src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp" onerror="fallbackImg(this,'🌹')"><span class="coin">1 moeda</span></div>
+<div class="miniItem"><img id="cardL10" class="gift" src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eb77ead5c3abb6da6034d3cf6cfeb438~tplv-obj.webp" onerror="fallbackImg(this,'🌹')"><span class="coin">10 moedas</span></div>
+</div><small>Rose — 1 moeda = 1 voto<br>Rosa — 10 moedas = 10 votos</small></div>
+<div class="card"><b>🔵 Flávio Bolsonaro</b><div class="mini">
+<div class="miniItem"><div id="cardF1" class="giftFallback">GG</div><span class="coin">1 moeda</span></div>
+<div class="miniItem"><img id="cardF10" class="gift" src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/resource/e033c3f28632e233bebac1668ff66a2f.png~tplv-obj.webp" onerror="fallbackImg(this,'💝')"><span class="coin">10 moedas</span></div>
+</div><small>GG — 1 moeda = 1 voto<br>Friendship Necklace — 10 moedas = 10 votos</small></div>
+</div>
+<button class="reset" onclick="reset()">Nova rodada</button><div id="log" class="log">Aguardando presentes…</div>
+</div>
+<script>
+let p=50;
+function render(){p=Math.max(0,Math.min(100,p));let q=100-p;document.getElementById('l').style.width=p+'%';document.getElementById('f').style.width=q+'%';document.querySelector('#l span').textContent='Lula '+p+'%';document.querySelector('#f span').textContent='Flávio Bolsonaro '+q+'%'}
+function vote(c,v){p+=c==='lula'?v:-v;render()}
+function reset(){p=50;render();document.getElementById('log').textContent='Nova rodada — aguardando presentes…'}
+function fallbackImg(el,emoji){const d=document.createElement('div');d.className='giftFallback';d.textContent=emoji;el.replaceWith(d)}
+function setGiftIcon(id,url){if(url){const el=document.getElementById(id);if(el&&el.tagName==='IMG'){el.src=url;el.style.display=''}else if(el){el.className='giftFallback';el.textContent='🎁';}}}
+function connect(){const ws=new WebSocket((location.protocol==='https:'?'wss://':'ws://')+location.host);ws.onopen=()=>document.getElementById('status').textContent='● Conectado — aguardando presentes do TikTok LIVE';ws.onclose=()=>{document.getElementById('status').textContent='○ Servidor desconectado — reconectando…';setTimeout(connect,2500)};ws.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.type==='gift'){vote(d.candidate,d.votes);const side=d.candidate==='lula'?'L':'F';const tier=d.coins===10?'10':'1';setGiftIcon(d.candidate==='lula'?'li':'fi',d.icon);setGiftIcon('card'+side+tier,d.icon);document.getElementById('log').textContent='🎁 '+d.user+' enviou '+d.giftName+' — '+d.coins+' moeda(s) = '+d.votes+' voto(s)'}}catch{}}}connect();render();
+</script></body></html>

@@ -1,161 +1,141 @@
-```html
 <!doctype html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Duelo de Presentes — TikTok LIVE</title>
 
 <style>
 *{box-sizing:border-box}
 
 body{
-  margin:0;
-  min-height:100vh;
-  background:#0e1015;
-  color:#fff;
-  font-family:Arial,sans-serif;
-  display:flex;
-  align-items:center;
-  justify-content:center
+margin:0;
+min-height:100vh;
+background:#0e1015;
+color:#fff;
+font-family:Arial,sans-serif;
+display:flex;
+align-items:center;
+justify-content:center
 }
 
 .game{
-  width:min(900px,94vw);
-  text-align:center
+width:min(900px,94vw);
+text-align:center
 }
 
 .status{
-  font-size:12px;
-  opacity:.55;
-  margin-bottom:12px
+font-size:12px;
+opacity:.55;
+margin-bottom:12px
 }
 
 h1{
-  font-size:clamp(25px,5vw,42px);
-  margin:0 0 7px
+font-size:clamp(25px,5vw,42px);
+margin:0 0 7px
 }
 
 .sub{
-  font-size:13px;
-  opacity:.55;
-  margin:0 0 22px
+font-size:13px;
+opacity:.55;
+margin:0 0 22px
 }
 
 /* RESULTADO */
 
 .bar{
-  height:72px;
-  border-radius:14px;
-  overflow:hidden;
-  display:flex;
-  background:#292c33;
-  box-shadow:0 8px 25px #0007
+height:72px;
+border-radius:14px;
+overflow:hidden;
+display:flex;
+background:#292c33;
+box-shadow:0 8px 25px #0007
 }
 
 .side{
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:800;
-  font-size:clamp(16px,2.8vw,25px);
-  transition:width .35s;
-  min-width:0;
-  white-space:nowrap
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:800;
+font-size:clamp(16px,2.8vw,25px);
+transition:width .35s;
+min-width:0;
+white-space:nowrap
 }
 
 .red{background:#d71920}
 .blue{background:#1769e0}
 
-/* PRESENTES */
+/* CARDS */
 
 .cards{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  margin:18px auto 0;
-  flex-wrap:wrap
+display:flex;
+gap:10px;
+justify-content:center;
+margin:18px auto 0;
+flex-wrap:wrap
 }
 
 .card{
-  width:260px;
-  background:#181b21;
-  border-radius:12px;
-  padding:10px 12px
+width:260px;
+background:#181b21;
+border-radius:12px;
+padding:10px 12px
 }
 
 .card b{
-  display:block;
-  font-size:14px;
-  margin-bottom:8px
+display:block;
+font-size:14px;
+margin-bottom:8px
 }
 
 .mini{
-  display:flex;
-  justify-content:center;
-  gap:24px
+display:flex;
+justify-content:center;
+gap:24px
 }
 
 .miniItem{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:3px
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:3px
 }
 
 .gift{
-  width:42px;
-  height:42px;
-  object-fit:contain
-}
-
-.giftFallback{
-  width:42px;
-  height:42px;
-  border-radius:9px;
-  background:#252832;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:23px;
-  flex:none
+width:48px;
+height:48px;
+object-fit:contain
 }
 
 .giftName{
-  font-size:10px;
-  opacity:.75
+font-size:10px;
+opacity:.75
 }
 
 .coin{
-  font-size:9px;
-  opacity:.5
-}
-
-.card small{
-  display:block;
-  margin-top:8px;
-  font-size:10px;
-  line-height:1.35;
-  opacity:.55
+font-size:9px;
+opacity:.5
 }
 
 .reset{
-  margin-top:15px;
-  border:0;
-  border-radius:8px;
-  padding:9px 15px;
-  background:#292c34;
-  color:#fff;
-  font-size:12px;
-  font-weight:bold;
-  cursor:pointer
+margin-top:15px;
+border:0;
+border-radius:8px;
+padding:9px 15px;
+background:#292c34;
+color:#fff;
+font-size:12px;
+font-weight:bold;
+cursor:pointer
 }
 
 .log{
-  margin-top:11px;
-  font-size:11px;
-  opacity:.45
+margin-top:11px;
+font-size:11px;
+opacity:.45
 }
 </style>
 </head>
@@ -175,15 +155,19 @@ Presentes da LIVE viram votos.
 </p>
 
 
-<!-- RESULTADO SEM ÍCONES -->
+<!-- RESULTADO -->
 
 <div class="bar">
 
-<div id="l" class="side red" style="width:50%">
+<div id="l"
+class="side red"
+style="width:50%">
 <span>Lula 50%</span>
 </div>
 
-<div id="f" class="side blue" style="width:50%">
+<div id="f"
+class="side blue"
+style="width:50%">
 <span>Flávio Bolsonaro 50%</span>
 </div>
 
@@ -203,9 +187,17 @@ Presentes da LIVE viram votos.
 
 <div class="mini">
 
+
+<!-- ROSE -->
+
 <div class="miniItem">
 
-<div id="cardL1" class="giftFallback">🌹</div>
+<img
+id="cardL1"
+class="gift"
+alt="Rose"
+src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp"
+>
 
 <span class="giftName">
 Rose
@@ -218,9 +210,16 @@ Rose
 </div>
 
 
+<!-- BOUQUET FLOWER -->
+
 <div class="miniItem">
 
-<div id="cardL20" class="giftFallback">🌸</div>
+<img
+id="cardL20"
+class="gift"
+alt="Bouquet Flower"
+src="https://beetgames.com/images/gifts/bouquet_flower.webp"
+>
 
 <span class="giftName">
 Bouquet Flower
@@ -245,9 +244,17 @@ Bouquet Flower
 
 <div class="mini">
 
+
+<!-- FIRE -->
+
 <div class="miniItem">
 
-<div id="cardF1" class="giftFallback">🔥</div>
+<img
+id="cardF1"
+class="gift"
+alt="Fire"
+src="https://beetgames.com/images/gifts/fire.webp"
+>
 
 <span class="giftName">
 Fire
@@ -260,9 +267,16 @@ Fire
 </div>
 
 
+<!-- DOUGHNUT -->
+
 <div class="miniItem">
 
-<div id="cardF20" class="giftFallback">🍩</div>
+<img
+id="cardF20"
+class="gift"
+alt="Doughnut"
+src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.webp"
+>
 
 <span class="giftName">
 Doughnut
@@ -297,6 +311,41 @@ Aguardando presentes…
 let p=50;
 
 
+/*
+PRESENTES
+
+Rose
+ID: 5655
+1 moeda
+1 voto
+
+Bouquet Flower
+ID: 5780
+30 moedas
+20 votos
+
+Doughnut
+ID: 5879
+30 moedas
+20 votos
+
+Fire
+1 moeda
+1 voto
+*/
+
+
+const GIFT_IDS={
+
+rose:5655,
+
+bouquet:5780,
+
+doughnut:5879
+
+};
+
+
 /* ATUALIZA RESULTADO */
 
 function render(){
@@ -305,14 +354,17 @@ p=Math.max(0,Math.min(100,p));
 
 let q=100-p;
 
-document.getElementById('l').style.width=p+'%';
-document.getElementById('f').style.width=q+'%';
+document.getElementById("l").style.width=
+p+"%";
 
-document.querySelector('#l span').textContent=
-'Lula '+p+'%';
+document.getElementById("f").style.width=
+q+"%";
 
-document.querySelector('#f span').textContent=
-'Flávio Bolsonaro '+q+'%';
+document.querySelector("#l span").textContent=
+"Lula "+p+"%";
+
+document.querySelector("#f span").textContent=
+"Flávio Bolsonaro "+q+"%";
 
 }
 
@@ -321,7 +373,15 @@ document.querySelector('#f span').textContent=
 
 function vote(candidate,votes){
 
-p += candidate==='lula' ? votes : -votes;
+if(candidate==="lula"){
+
+p+=votes;
+
+}else{
+
+p-=votes;
+
+}
 
 render();
 
@@ -336,177 +396,298 @@ p=50;
 
 render();
 
-document.getElementById('log').textContent=
-'Nova rodada — aguardando presentes…';
+document.getElementById("log").textContent=
+"Nova rodada — aguardando presentes…";
 
 }
 
 
 /*
-  ATUALIZA ÍCONE DO CARD
-  usando a imagem enviada pelo servidor/TikTok
+TROCA O ÍCONE PELO ÍCONE REAL
+QUE O SERVIDOR ENVIAR
 */
 
-function setGiftIcon(id,url,fallback){
+function setIcon(id,url){
+
+if(!url)return;
 
 const el=document.getElementById(id);
 
 if(!el)return;
 
-if(url){
+el.src=url;
 
-const img=document.createElement('img');
+}
 
-img.className='gift';
 
-img.src=url;
+/* IDENTIFICA O PRESENTE */
 
-img.onerror=()=>{
+function identifyGift(d){
 
-el.className='giftFallback';
+const name=
+String(
+d.giftName ||
+d.gift ||
+d.name ||
+""
+)
+.toLowerCase()
+.trim();
 
-el.textContent=fallback;
+
+const id=
+Number(
+d.giftId ||
+d.id ||
+0
+);
+
+
+/* ROSE */
+
+if(
+id===GIFT_IDS.rose ||
+name==="rose"
+){
+
+return{
+
+candidate:"lula",
+
+votes:1,
+
+card:"cardL1",
+
+label:"Rose"
 
 };
 
-el.replaceWith(img);
-
-}
-
 }
 
 
-/* CONEXÃO COM SEU PACKAGE */
+/* BOUQUET FLOWER */
+
+if(
+id===GIFT_IDS.bouquet ||
+name==="bouquet flower" ||
+name==="bouquetflower" ||
+name==="bouquet"
+){
+
+return{
+
+candidate:"lula",
+
+votes:20,
+
+card:"cardL20",
+
+label:"Bouquet Flower"
+
+};
+
+}
+
+
+/* DOUGHNUT */
+
+if(
+id===GIFT_IDS.doughnut ||
+name==="doughnut"
+){
+
+return{
+
+candidate:"flavio",
+
+votes:20,
+
+card:"cardF20",
+
+label:"Doughnut"
+
+};
+
+}
+
+
+/* FIRE */
+
+if(
+name==="fire" ||
+name==="fogo"
+){
+
+return{
+
+candidate:"flavio",
+
+votes:1,
+
+card:"cardF1",
+
+label:"Fire"
+
+};
+
+}
+
+
+return null;
+
+}
+
+
+/* CONEXÃO */
 
 function connect(){
 
-const ws=new WebSocket(
-(location.protocol==='https:'?'wss://':'ws://')+
+const ws=
+new WebSocket(
+(location.protocol==="https:"
+?"wss://"
+:"ws://")
++
 location.host
 );
 
 
-ws.onopen=()=>{
+ws.onopen=function(){
 
-document.getElementById('status').textContent=
-'● Conectado — aguardando presentes do TikTok LIVE';
+document.getElementById("status").textContent=
+"● Conectado — aguardando presentes do TikTok LIVE";
 
 };
 
 
-ws.onclose=()=>{
+ws.onclose=function(){
 
-document.getElementById('status').textContent=
-'○ Servidor desconectado — reconectando…';
+document.getElementById("status").textContent=
+"○ Servidor desconectado — reconectando…";
 
 setTimeout(connect,2500);
 
 };
 
 
-ws.onmessage=e=>{
+ws.onmessage=function(e){
 
 try{
 
 const d=JSON.parse(e.data);
 
-if(d.type!=='gift')return;
+
+/*
+ACEITA:
+
+{
+type:"gift",
+giftName:"Fire"
+}
+
+OU
+
+{
+type:"gift",
+giftId:5655,
+giftName:"Rose"
+}
+*/
+
+if(d.type!=="gift")return;
+
+
+/* IDENTIFICA */
+
+const gift=
+identifyGift(d);
 
 
 /*
-  IDENTIFICA OS PRESENTES
-
-  Rose     → Lula       → 1 voto
-  Fire     → Flávio     → 1 voto
-  Bouquet  → Lula       → 20 votos
-  Doughnut → Flávio     → 20 votos
+SE O SEU SERVIDOR JÁ ENVIA
+candidate + votes, TAMBÉM ACEITA
+ESSE FORMATO.
 */
 
-const name=(d.giftName||'').toLowerCase();
+if(!gift && d.candidate){
 
-let candidate;
-let votes;
-let cardId;
-let fallback;
+vote(
+d.candidate,
+Number(d.votes||0)
+);
 
-
-if(name.includes('rose')){
-
-candidate='lula';
-votes=1;
-cardId='cardL1';
-fallback='🌹';
+return;
 
 }
 
 
-else if(name.includes('fire')){
-
-candidate='flavio';
-votes=1;
-cardId='cardF1';
-fallback='🔥';
-
-}
+if(!gift)return;
 
 
-else if(
-name.includes('bouquet flower') ||
-name.includes('bouquet')
-){
+/* REGISTRA VOTO */
 
-candidate='lula';
-votes=20;
-cardId='cardL20';
-fallback='🌸';
-
-}
-
-
-else if(name.includes('doughnut')){
-
-candidate='flavio';
-votes=20;
-cardId='cardF20';
-fallback='🍩';
-
-}
-
-
-/*
-  Se for um presente que não está
-  configurado, ignora.
-*/
-
-if(!candidate)return;
-
-
-/* APLICA VOTOS */
-
-vote(candidate,votes);
-
-
-/* MOSTRA O ÍCONE REAL */
-
-setGiftIcon(
-cardId,
-d.icon,
-fallback
+vote(
+gift.candidate,
+gift.votes
 );
 
 
-/* REGISTRO */
+/*
+SE O SERVIDOR MANDAR O ÍCONE
+REAL DO TIKTOK, USA ELE.
 
-document.getElementById('log').textContent=
-'🎁 '+(d.user||'Usuário')+
-' enviou '+(d.giftName||'presente')+
-' — '+votes+' voto(s)';
+ACEITA:
+d.icon
+d.giftPictureUrl
+d.giftIcon
+d.iconUrl
+*/
+
+const icon=
+d.icon ||
+d.giftPictureUrl ||
+d.giftIcon ||
+d.iconUrl;
+
+
+/* ATUALIZA ÍCONE */
+
+if(icon){
+
+setIcon(
+gift.card,
+icon
+);
 
 }
 
-catch(error){
 
-console.log(error);
+/* LOG */
+
+const user=
+d.user?.uniqueId ||
+d.user?.nickname ||
+d.username ||
+d.user ||
+"Usuário";
+
+
+document.getElementById("log").textContent=
+"🎁 "+
+user+
+" enviou "+
+gift.label+
+" — "+
+gift.votes+
+" voto(s)";
+
+
+}catch(error){
+
+console.log(
+"Erro no presente:",
+error
+);
 
 }
 
@@ -525,4 +706,3 @@ render();
 
 </body>
 </html>
-```

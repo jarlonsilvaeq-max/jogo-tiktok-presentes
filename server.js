@@ -19,7 +19,6 @@ const gifts = {
 };
 
 const server = http.createServer((req, res) => {
-
   let requestPath = decodeURIComponent(
     (req.url || '/').split('?')[0]
   );
@@ -31,9 +30,7 @@ const server = http.createServer((req, res) => {
   const filePath = path.join(__dirname, requestPath);
 
   fs.readFile(filePath, (err, data) => {
-
     if (err) {
-
       console.error('Arquivo não encontrado:', filePath);
 
       res.writeHead(404, {
@@ -65,13 +62,10 @@ const server = http.createServer((req, res) => {
   });
 });
 
-
 const wss = new WebSocketServer({ server });
-
 const clients = new Set();
 
 wss.on('connection', ws => {
-
   clients.add(ws);
 
   ws.on('close', () => {
@@ -88,46 +82,42 @@ wss.on('connection', ws => {
   }));
 });
 
-
 function broadcast(payload) {
-
   const message = JSON.stringify(payload);
 
   for (const ws of clients) {
-
     if (ws.readyState === 1) {
       ws.send(message);
     }
-
   }
 }
 
-
 server.listen(port, '0.0.0.0', () => {
-
-  console.log(
-    `Servidor web ativo na porta ${port}`
-  );
-
-  console.log(
-    `TikTok configurado: @${username}`
-  );
-
+  console.log(`Servidor web ativo na porta ${port}`);
+  console.log(`TikTok configurado: @${username}`);
 });
 
-
 const client = new TikTokLiveClient(username);
-
 
 client.on(EventType.gift, data => {
 
   const gift = data?.gift || {};
-
   const id = Number(gift.id);
+
+  // MOSTRA NO LOG O ID REAL DO PRESENTE
+  console.log('🎁 PRESENTE RECEBIDO:', {
+    id: gift.id,
+    name: gift.name,
+    diamondCount: gift.diamondCount,
+    diamond_count: gift.diamond_count
+  });
 
   const rule = gifts[id];
 
-  if (!rule) return;
+  if (!rule) {
+    console.log('⚠️ PRESENTE NÃO CADASTRADO — ID:', id);
+    return;
+  }
 
   const repeat = Math.max(
     1,
@@ -146,39 +136,26 @@ client.on(EventType.gift, data => {
     gift?.image?.urlList?.[0] ||
     '';
 
-
   broadcast({
-
     type: 'gift',
-
     giftId: id,
-
     giftName: rule.name,
-
     candidate: rule.candidate,
-
     votes: rule.votes * repeat,
-
     coins:
       Number(
         gift.diamondCount ||
         gift.diamond_count ||
         0
       ) * repeat,
-
     user,
-
     icon
-
   });
-
 
   console.log(
     `${user}: ${rule.name} x${repeat} -> ${rule.votes * repeat} voto(s)`
   );
-
 });
-
 
 async function connectTikTok() {
 
@@ -205,10 +182,7 @@ async function connectTikTok() {
       connectTikTok,
       5000
     );
-
   }
-
 }
-
 
 connectTikTok();

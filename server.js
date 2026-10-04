@@ -1,454 +1,965 @@
-import http from 'http';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { WebSocketServer } from 'ws';
+import http from "http";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { WebSocketServer } from "ws";
+
 import {
   TikTokLiveClient,
   EventType,
   GiftStreakTracker
-} from 'piratetok-live-js';
+} from "piratetok-live-js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
-const PORT = Number(process.env.PORT || 8081);
-const HOST = '0.0.0.0';
+/* =========================================================
+   CONFIGURAÇÃO
+========================================================= */
 
-const USERNAME = (process.env.TIKTOK_USERNAME || '')
-  .replace(/^@/, '')
-  .trim();
+const PORT = Number(process.env.PORT || 10000);
 
-const ROSE_ID = 5655;
+/*
+   No Render, coloque no Environment:
+   TIKTOK_USERNAME=085.game.players
 
-if (!USERNAME) {
-  console.error('ERRO: defina TIKTOK_USERNAME nas Environment Variables.');
-}
+   Se não existir, usamos este valor.
+*/
+const TIKTOK_USERNAME =
+  process.env.TIKTOK_USERNAME ||
+  "085.game.players";
 
-const publicDir = __dirname;
 
-const clients = new Set();
+/* =========================================================
+   CAMINHO DA PÁGINA
+========================================================= */
 
-let tiktokClient = null;
-let reconnectTimer = null;
-let connected = false;
+const __filename =
+  fileURLToPath(import.meta.url);
 
-const streaks = new GiftStreakTracker();
+const __dirname =
+  path.dirname(__filename);
 
-function broadcast(obj) {
-  const msg = JSON.stringify(obj);
+const PUBLIC_DIR =
+  path.join(__dirname, "public");
 
-  for (const ws of clients) {
-    if (ws.readyState === 1) {
-      try {
-        ws.send(msg);
-      } catch (_) {}
-    }
-  }
-}
 
-function logGift(data) {
-  const gift = data?.gift || {};
-  const user = data?.user || {};
+/* =========================================================
+   SERVIDOR HTTP
+========================================================= */
 
-  const name = String(gift.name || '').trim();
+const server =
+  http.createServer((req, res) => {
 
-  const id = Number(
-    gift.id ??
-    gift.giftId ??
-    0
-  );
+    let requestPath =
+      req.url?.split("?")[0] || "/";
 
-  const diamonds = Number(
-    gift.diamondCount ??
-    0
-  );
 
-  const repeat = Math.max(
-    1,
-    Number(
-      data.repeatCount ??
-      data.repeat_count ??
-      1
-    )
-  );
-
-  console.log(
-    `🎁 PRESENTE | ${
-      user.uniqueId ||
-      user.nickname ||
-      '?'
-    } | ${name} | ID=${id} | moedas=${diamonds} | x${repeat}`
-  );
-
-  /*
-    ROSE = LULA
-    ROSA = FLÁVIO
-
-    Rose possui ID público 5655.
-    Para Rosa usamos o nome recebido pelo TikTok.
-  */
-
-  let candidate = null;
-
-  const normalizedName = name
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-
-  if (
-    id === ROSE_ID ||
-    normalizedName === 'rose'
-  ) {
-    candidate = 'lula';
-  } else if (
-    normalizedName === 'rosa'
-  ) {
-    candidate = 'flavio';
-  }
-
-  if (!candidate) {
-    console.log(
-      `ℹ️ Presente ignorado: ${name} | ID=${id}`
-    );
-
-    return;
-  }
-
-  /*
-    GiftStreakTracker evita contar duas vezes
-    presentes enviados em sequência.
-  */
-
-  let votes = Math.max(1, diamonds) * repeat;
-
-  try {
-    const streak = streaks.process(data);
-
-    if (
-      streak &&
-      Number.isFinite(streak.eventGiftCount)
-    ) {
-      votes =
-        Math.max(1, diamonds) *
-        Math.max(
-          1,
-          Number(streak.eventGiftCount)
-        );
+    if(requestPath === "/"){
+      requestPath = "/index.html";
     }
 
-    /*
-      Se ainda estiver no meio de uma sequência,
-      esperamos o próximo evento/finalização.
-    */
-
-    if (
-      streak &&
-      streak.isFinal === false &&
-      repeat > 1
-    ) {
-      console.log(
-        `⏳ Streak em andamento: ${name} x${repeat}`
-      );
-
-      return;
-    }
-  } catch (error) {
-    console.log(
-      'Aviso GiftStreakTracker:',
-      error?.message || error
-    );
-  }
-
-  console.log(
-    `🗳️ VOTOS | ${candidate} | +${votes}`
-  );
-
-  broadcast({
-    type: 'gift',
-
-    candidate,
-
-    votes,
-
-    giftName: name,
-
-    giftId: id,
-
-    coins: diamonds,
-
-    repeatCount: repeat,
-
-    user:
-      user.uniqueId ||
-      user.nickname ||
-      '?',
-
-    icon:
-      gift.pictureUrl ||
-      gift.iconUrl ||
-      gift.picture ||
-      null
-  });
-}
-
-async function connectTikTok() {
-  if (!USERNAME) {
-    return;
-  }
-
-  if (tiktokClient) {
-    try {
-      tiktokClient.disconnect?.();
-    } catch (_) {}
-  }
-
-  console.log(
-    `Tentando conectar ao TikTok LIVE de @${USERNAME} usando PirateTok...`
-  );
-
-  try {
-    tiktokClient =
-      new TikTokLiveClient(USERNAME);
-
-    tiktokClient.on(
-      EventType.connected,
-      (data) => {
-        connected = true;
-
-        console.log(
-          `🟢 TIKTOK CONECTADO | @${USERNAME} | room=${
-            data?.roomId ||
-            data?.room_id ||
-            '?'
-          }`
-        );
-
-        broadcast({
-          type: 'status',
-          connected: true
-        });
-      }
-    );
-
-    tiktokClient.on(
-      EventType.gift,
-      logGift
-    );
-
-    tiktokClient.on(
-      EventType.liveEnded,
-      () => {
-        connected = false;
-
-        console.log(
-          '🔴 LIVE encerrada. Tentando novamente em 15 segundos...'
-        );
-
-        broadcast({
-          type: 'status',
-          connected: false
-        });
-
-        scheduleReconnect(15000);
-      }
-    );
-
-    tiktokClient.on(
-      EventType.error,
-      (error) => {
-        console.error(
-          '❌ Erro PirateTok:',
-          error
-        );
-      }
-    );
-
-    tiktokClient.on(
-      EventType.reconnecting,
-      (data) => {
-        console.log(
-          '🔄 Reconectando TikTok:',
-          data
-        );
-      }
-    );
-
-    await tiktokClient.connect();
-
-  } catch (error) {
-    connected = false;
-
-    console.error(
-      '❌ Falha ao conectar ao TikTok:',
-      error?.message ||
-      error
-    );
-
-    broadcast({
-      type: 'status',
-      connected: false,
-      error: String(
-        error?.message ||
-        error
-      )
-    });
-
-    scheduleReconnect(30000);
-  }
-}
-
-function scheduleReconnect(ms) {
-  if (reconnectTimer) {
-    return;
-  }
-
-  reconnectTimer = setTimeout(
-    () => {
-      reconnectTimer = null;
-      connectTikTok();
-    },
-    ms
-  );
-}
-
-const server = http.createServer(
-  (req, res) => {
-
-    const url = new URL(
-      req.url,
-      `http://${req.headers.host || 'localhost'}`
-    );
-
-    let file =
-      url.pathname === '/'
-        ? '/index.html'
-        : url.pathname;
-
-    const safe = path
-      .normalize(file)
-      .replace(/^([.][.][/\\])+/, '');
 
     const filePath =
-      path.join(
-        publicDir,
-        safe
+      path.normalize(
+        path.join(
+          PUBLIC_DIR,
+          requestPath
+        )
       );
 
-    if (
-      !filePath.startsWith(publicDir)
-    ) {
+
+    /*
+       Impede acesso fora da pasta public.
+    */
+
+    if(
+      !filePath.startsWith(
+        PUBLIC_DIR
+      )
+    ){
+
       res.writeHead(403);
-      return res.end(
-        'Forbidden'
-      );
+      res.end("Forbidden");
+      return;
+
     }
+
 
     fs.readFile(
       filePath,
-      (err, data) => {
+      (error, data) => {
 
-        if (err) {
-          res.writeHead(404);
+        if(error){
 
-          return res.end(
-            'Not found'
-          );
+          res.writeHead(404, {
+            "Content-Type":
+              "text/plain; charset=utf-8"
+          });
+
+          res.end("Arquivo não encontrado.");
+          return;
+
         }
 
+
         const ext =
-          path.extname(filePath);
+          path.extname(filePath)
+            .toLowerCase();
+
 
         const types = {
-          '.html':
-            'text/html; charset=utf-8',
 
-          '.js':
-            'text/javascript; charset=utf-8',
+          ".html":
+            "text/html; charset=utf-8",
 
-          '.css':
-            'text/css; charset=utf-8',
+          ".css":
+            "text/css; charset=utf-8",
 
-          '.png':
-            'image/png',
+          ".js":
+            "application/javascript; charset=utf-8",
 
-          '.jpg':
-            'image/jpeg',
+          ".json":
+            "application/json; charset=utf-8",
 
-          '.jpeg':
-            'image/jpeg',
+          ".png":
+            "image/png",
 
-          '.svg':
-            'image/svg+xml',
+          ".jpg":
+            "image/jpeg",
 
-          '.ico':
-            'image/x-icon'
+          ".jpeg":
+            "image/jpeg",
+
+          ".webp":
+            "image/webp",
+
+          ".svg":
+            "image/svg+xml"
+
         };
 
-        res.writeHead(
-          200,
-          {
-            'Content-Type':
-              types[ext] ||
-              'application/octet-stream'
-          }
-        );
+
+        res.writeHead(200, {
+          "Content-Type":
+            types[ext] ||
+            "application/octet-stream"
+        });
+
 
         res.end(data);
+
       }
     );
-  }
-);
+
+  });
+
+
+/* =========================================================
+   WEBSOCKET
+========================================================= */
 
 const wss =
   new WebSocketServer({
     server
   });
 
-wss.on(
-  'connection',
-  (ws) => {
 
-    clients.add(ws);
+const clients =
+  new Set();
+
+
+wss.on(
+  "connection",
+  (socket) => {
+
+    clients.add(socket);
+
 
     console.log(
-      '🌐 Overlay conectado.'
+      "[WS] Jogo conectado. Total:",
+      clients.size
     );
 
-    ws.send(
+
+    socket.send(
       JSON.stringify({
-        type: 'status',
-        connected
+        type:"status",
+        connected:true
       })
     );
 
-    ws.on(
-      'close',
+
+    socket.on(
+      "close",
       () => {
-        clients.delete(ws);
+
+        clients.delete(socket);
+
+        console.log(
+          "[WS] Jogo desconectado. Total:",
+          clients.size
+        );
+
       }
     );
 
-    ws.on(
-      'error',
-      () => {
-        clients.delete(ws);
-      }
-    );
   }
 );
 
+
+/* =========================================================
+   ENVIAR PARA O JOGO
+========================================================= */
+
+function broadcast(data){
+
+  const message =
+    JSON.stringify(data);
+
+
+  for(
+    const socket of clients
+  ){
+
+    if(
+      socket.readyState === 1
+    ){
+
+      try{
+
+        socket.send(message);
+
+      }catch(error){
+
+        console.error(
+          "[WS] Erro ao enviar:",
+          error
+        );
+
+      }
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   PRESENTES
+========================================================= */
+
+const GIFTS = {
+
+  rose:{
+
+    ids:[
+      5655
+    ],
+
+    names:[
+      "rose"
+    ],
+
+    candidate:
+      "lula",
+
+    votes:
+      1,
+
+    label:
+      "Rose"
+
+  },
+
+
+  gg:{
+
+    ids:[
+      6064
+    ],
+
+    names:[
+      "gg"
+    ],
+
+    candidate:
+      "flavio",
+
+    votes:
+      1,
+
+    label:
+      "GG"
+
+  },
+
+
+  bouquet:{
+
+    ids:[
+      5780
+    ],
+
+    names:[
+      "bouquet flower",
+      "bouquetflower",
+      "bouquet"
+    ],
+
+    candidate:
+      "lula",
+
+    votes:
+      20,
+
+    label:
+      "Bouquet Flower"
+
+  },
+
+
+  doughnut:{
+
+    ids:[
+      5879
+    ],
+
+    names:[
+      "doughnut",
+      "donut"
+    ],
+
+    candidate:
+      "flavio",
+
+    votes:
+      20,
+
+    label:
+      "Doughnut"
+
+  }
+
+};
+
+
+/* =========================================================
+   NORMALIZAR TEXTO
+========================================================= */
+
+function normalize(value){
+
+  if(
+    value === undefined ||
+    value === null
+  ){
+
+    return "";
+
+  }
+
+
+  return String(value)
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(
+      /[\u0300-\u036f]/g,
+      ""
+    );
+
+}
+
+
+/* =========================================================
+   IDENTIFICAR PRESENTE
+========================================================= */
+
+function identifyGift(data){
+
+  const gift =
+    data?.gift || {};
+
+
+  /*
+     PirateTok normalmente coloca
+     as informações do presente
+     dentro de data.gift.
+  */
+
+  const idValues = [
+
+    gift.id,
+    gift.giftId,
+
+    data?.giftId,
+    data?.gift_id,
+    data?.id
+
+  ];
+
+
+  let id = 0;
+
+
+  for(
+    const value of idValues
+  ){
+
+    const number =
+      Number(value);
+
+
+    if(
+      Number.isFinite(number) &&
+      number > 0
+    ){
+
+      id = number;
+      break;
+
+    }
+
+  }
+
+
+  const nameValues = [
+
+    gift.name,
+    gift.giftName,
+
+    data?.giftName,
+    data?.gift_name,
+    data?.name
+
+  ];
+
+
+  let name = "";
+
+
+  for(
+    const value of nameValues
+  ){
+
+    const normalized =
+      normalize(value);
+
+
+    if(normalized){
+
+      name = normalized;
+      break;
+
+    }
+
+  }
+
+
+  console.log(
+    "[GIFT] Identificação:",
+    {
+      id,
+      name
+    }
+  );
+
+
+  /*
+     PRIMEIRO ID
+  */
+
+  if(id){
+
+    for(
+      const key of Object.keys(GIFTS)
+    ){
+
+      const item =
+        GIFTS[key];
+
+
+      if(
+        item.ids.includes(id)
+      ){
+
+        return item;
+
+      }
+
+    }
+
+  }
+
+
+  /*
+     DEPOIS NOME
+  */
+
+  if(name){
+
+    for(
+      const key of Object.keys(GIFTS)
+    ){
+
+      const item =
+        GIFTS[key];
+
+
+      if(
+        item.names.includes(name)
+      ){
+
+        return item;
+
+      }
+
+    }
+
+  }
+
+
+  return null;
+
+}
+
+
+/* =========================================================
+   USUÁRIO
+========================================================= */
+
+function getUsername(data){
+
+  return (
+
+    data?.user?.uniqueId ||
+
+    data?.user?.unique_id ||
+
+    data?.user?.nickname ||
+
+    data?.username ||
+
+    data?.uniqueId ||
+
+    data?.nickname ||
+
+    "Usuário"
+
+  );
+
+}
+
+
+/* =========================================================
+   GIFT STREAK TRACKER
+========================================================= */
+
+const giftTracker =
+  new GiftStreakTracker();
+
+
+/* =========================================================
+   EVENTO DE PRESENTE
+========================================================= */
+
+async function handleGift(data){
+
+  try{
+
+    console.log(
+      "[GIFT RAW]",
+      JSON.stringify(data)
+    );
+
+
+    /*
+       O PirateTok fornece o tracker
+       para transformar repeatCount
+       cumulativo em quantidade real
+       recebida naquele evento.
+    */
+
+    let streak;
+
+
+    try{
+
+      streak =
+        giftTracker.process(data);
+
+    }catch(error){
+
+      console.log(
+        "[GIFT] Tracker não processou:",
+        error.message
+      );
+
+    }
+
+
+    /*
+       Quantidade real do evento.
+
+       Se o tracker funcionar,
+       usamos eventGiftCount.
+
+       Caso contrário, usamos repeatCount.
+    */
+
+    let quantity =
+      Number(
+        streak?.eventGiftCount
+      );
+
+
+    if(
+      !Number.isFinite(quantity) ||
+      quantity <= 0
+    ){
+
+      quantity =
+        Number(
+          data?.repeatCount ||
+          data?.repeat_count ||
+          1
+        );
+
+    }
+
+
+    const gift =
+      identifyGift(data);
+
+
+    if(!gift){
+
+      console.log(
+        "[GIFT] Não reconhecido."
+      );
+
+      broadcast({
+
+        type:
+          "gift_unknown",
+
+        giftId:
+          data?.gift?.id ||
+          data?.giftId ||
+          null,
+
+        giftName:
+          data?.gift?.name ||
+          data?.giftName ||
+          null,
+
+        repeatCount:
+          quantity,
+
+        user:
+          getUsername(data)
+
+      });
+
+      return;
+
+    }
+
+
+    /*
+       Para o nosso jogo:
+       cada unidade do presente
+       gera os votos correspondentes.
+    */
+
+    const votes =
+      gift.votes * quantity;
+
+
+    const user =
+      getUsername(data);
+
+
+    console.log(
+      `[GIFT] ${user} -> ${gift.label} x${quantity} = +${votes}`
+    );
+
+
+    broadcast({
+
+      type:
+        "gift",
+
+      giftId:
+        gift.ids[0],
+
+      giftName:
+        gift.label,
+
+      candidate:
+        gift.candidate,
+
+      votes:
+        votes,
+
+      quantity:
+        quantity,
+
+      user:
+        user,
+
+      label:
+        gift.label
+
+    });
+
+  }catch(error){
+
+    console.error(
+      "[GIFT] Erro:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CLIENTE PIRATETOK
+========================================================= */
+
+let tiktokClient = null;
+
+let connecting = false;
+
+
+/* =========================================================
+   CONECTAR AO TIKTOK
+========================================================= */
+
+async function connectTikTok(){
+
+  if(connecting){
+    return;
+  }
+
+
+  connecting = true;
+
+
+  console.log(
+    "================================="
+  );
+
+  console.log(
+    "[PIRATETOK] Conectando..."
+  );
+
+  console.log(
+    "[PIRATETOK] Usuário:",
+    TIKTOK_USERNAME
+  );
+
+  console.log(
+    "================================="
+  );
+
+
+  try{
+
+    tiktokClient =
+      new TikTokLiveClient(
+        TIKTOK_USERNAME
+      );
+
+
+    /*
+       PRESENTES
+    */
+
+    tiktokClient.on(
+      EventType.gift,
+      handleGift
+    );
+
+
+    /*
+       CHAT
+    */
+
+    tiktokClient.on(
+      EventType.chat,
+      (data) => {
+
+        console.log(
+          `[CHAT] ${
+            data?.user?.nickname ||
+            data?.user?.uniqueId ||
+            "?"
+          }: ${
+            data?.content ||
+            ""
+          }`
+        );
+
+      }
+    );
+
+
+    /*
+       LIKES
+    */
+
+    tiktokClient.on(
+      EventType.like,
+      (data) => {
+
+        console.log(
+          "[LIKE]",
+          data?.user?.nickname,
+          data?.total
+        );
+
+      }
+    );
+
+
+    /*
+       CONECTAR
+    */
+
+    await tiktokClient.connect();
+
+
+    console.log(
+      "[PIRATETOK] CONECTADO COM SUCESSO!"
+    );
+
+
+    broadcast({
+
+      type:
+        "tiktok_status",
+
+      connected:
+        true,
+
+      username:
+        TIKTOK_USERNAME
+
+    });
+
+
+  }catch(error){
+
+    console.error(
+      "[PIRATETOK] ERRO:",
+      error
+    );
+
+
+    broadcast({
+
+      type:
+        "tiktok_status",
+
+      connected:
+        false,
+
+      error:
+        error?.message ||
+        String(error)
+
+    });
+
+
+    /*
+       Tenta novamente.
+    */
+
+    setTimeout(
+      () => {
+
+        connecting =
+          false;
+
+        connectTikTok();
+
+      },
+      10000
+    );
+
+
+    return;
+
+  }
+
+
+  connecting = false;
+
+}
+
+
+/* =========================================================
+   INICIAR SERVIDOR
+========================================================= */
+
 server.listen(
   PORT,
-  HOST,
+  "0.0.0.0",
   () => {
 
     console.log(
-      `Servidor rodando em ${HOST}:${PORT}`
+      "================================="
     );
 
-    if (USERNAME) {
-      connectTikTok();
-    }
+    console.log(
+      `Servidor HTTP: porta ${PORT}`
+    );
+
+    console.log(
+      `TikTok: @${TIKTOK_USERNAME}`
+    );
+
+    console.log(
+      "WebSocket: ativo"
+    );
+
+    console.log(
+      "================================="
+    );
+
+
+    connectTikTok();
+
+  }
+);
+
+
+/* =========================================================
+   ENCERRAMENTO
+========================================================= */
+
+process.on(
+  "SIGTERM",
+  () => {
+
+    console.log(
+      "[SERVER] Encerrando..."
+    );
+
+
+    try{
+
+      tiktokClient?.disconnect?.();
+
+    }catch{}
+
+
+    server.close(
+      () => process.exit(0)
+    );
+
   }
 );

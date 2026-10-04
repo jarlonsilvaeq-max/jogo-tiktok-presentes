@@ -1,160 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Duelo de Presentes</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Duelo de Presentes — TikTok LIVE</title>
 <style>
 *{box-sizing:border-box}
-
-body{
-    margin:0;
-    min-height:100vh;
-    background:#0e1015;
-    color:#fff;
-    font-family:Arial,sans-serif;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.game{
-    width:min(1000px,94vw);
-    text-align:center;
-}
-
-h1{
-    font-size:clamp(26px,5vw,46px);
-    margin:0 0 8px;
-}
-
-.sub{
-    opacity:.7;
-    margin:0 0 26px;
-}
-
-.bar{
-    height:90px;
-    border-radius:18px;
-    overflow:hidden;
-    display:flex;
-    background:#292c33;
-    box-shadow:0 10px 35px #0008;
-}
-
-.side{
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:800;
-    font-size:clamp(16px,3vw,30px);
-    transition:width .35s ease;
-    min-width:0;
-    overflow:hidden;
-    white-space:nowrap;
-}
-
-.red{
-    background:#d71920;
-}
-
-.blue{
-    background:#1769e0;
-}
-
-.cards{
-    display:flex;
-    gap:14px;
-    justify-content:center;
-    margin:22px auto 0;
-    flex-wrap:wrap;
-}
-
-.card{
-    width:310px;
-    background:#181b21;
-    border-radius:15px;
-    padding:14px;
-}
-
-.card-title{
-    font-weight:bold;
-    margin-bottom:12px;
-}
-
-.mini{
-    display:flex;
-    justify-content:center;
-    gap:25px;
-}
-
-.miniItem{
-    width:110px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:6px;
-    cursor:pointer;
-    user-select:none;
-    transition:.15s;
-}
-
-.miniItem:hover{
-    transform:scale(1.08);
-}
-
-.miniItem:active{
-    transform:scale(.92);
-}
-
-.gift{
-    width:65px;
-    height:65px;
-    object-fit:contain;
-}
-
-.coin{
-    font-size:11px;
-    opacity:.65;
-}
-
-.name{
-    font-size:12px;
-    font-weight:bold;
-}
-
-.reset{
-    margin-top:20px;
-    border:0;
-    border-radius:10px;
-    padding:12px 20px;
-    background:#292c34;
-    color:#fff;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.reset:hover{
-    background:#383c46;
-}
-
-.log{
-    margin-top:15px;
-    font-size:12px;
-    opacity:.55;
-    min-height:18px;
-}
-
+body{margin:0;min-height:100vh;background:#0e1015;color:#fff;font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center}
+.game{width:min(1000px,94vw);text-align:center}
+.status{font-size:13px;opacity:.65;margin-bottom:14px}
+h1{font-size:clamp(26px,5vw,46px);margin:0 0 8px}
+.sub{opacity:.7;margin:0 0 26px}
+.bar{height:90px;border-radius:18px;overflow:hidden;display:flex;background:#292c33;box-shadow:0 10px 35px #0008}
+.side{height:100%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:clamp(16px,3vw,30px);transition:width .35s;min-width:0;overflow:hidden;white-space:nowrap}
+.red{background:#d71920}
+.blue{background:#1769e0}
+.cards{display:flex;gap:14px;justify-content:center;margin:22px auto 0;flex-wrap:wrap}
+.card{width:310px;background:#181b21;border-radius:15px;padding:14px}
+.card b{display:block;margin-bottom:12px}
+.mini{display:flex;justify-content:center;gap:22px}
+.miniItem{width:110px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;user-select:none;transition:.15s}
+.miniItem:hover{transform:scale(1.08)}
+.miniItem:active{transform:scale(.92)}
+.gift{width:65px;height:65px;object-fit:contain}
+.coin{font-size:11px;opacity:.6}
+.name{font-size:12px;font-weight:bold}
+.reset{margin-top:18px;border:0;border-radius:10px;padding:12px 18px;background:#292c34;color:#fff;font-weight:bold;cursor:pointer}
+.log{margin-top:15px;font-size:12px;opacity:.55;min-height:18px}
 @media(max-width:600px){
-    .bar{
-        height:75px;
-    }
-
-    .card{
-        width:100%;
-    }
+.bar{height:75px}
+.card{width:100%}
 }
 </style>
 </head>
@@ -163,629 +38,217 @@ h1{
 
 <div class="game">
 
-    <h1>Quem você escolheria?</h1>
+<div id="status" class="status">Conectando...</div>
 
-    <p class="sub">
-        Clique nos presentes para testar os votos.
-    </p>
+<h1>Quem você escolheria?</h1>
 
-    <div class="bar">
+<p class="sub">Presentes da LIVE viram votos pelo valor definido.</p>
 
-        <div id="lulaSide"
-             class="side red"
-             style="width:50%">
-            <span id="lulaText">Lula 50%</span>
-        </div>
+<div class="bar">
 
-        <div id="flavioSide"
-             class="side blue"
-             style="width:50%">
-            <span id="flavioText">Flávio Bolsonaro 50%</span>
-        </div>
+<div id="lulaSide" class="side red" style="width:50%">
+<span id="lulaText">Lula 50%</span>
+</div>
 
-    </div>
+<div id="flavioSide" class="side blue" style="width:50%">
+<span id="flavioText">Flávio Bolsonaro 50%</span>
+</div>
 
+</div>
 
-    <div class="cards">
+<div class="cards">
 
-        <!-- LULA -->
+<div class="card">
 
-        <div class="card">
+<b>🔴 Lula</b>
 
-            <div class="card-title">
-                🔴 Lula
-            </div>
+<div class="mini">
 
-            <div class="mini">
+<div class="miniItem" onclick="vote('lula',1,'Rose')">
 
-                <!-- ROSE -->
+<img
+class="gift"
+src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp"
+alt="Rose">
 
-                <div class="miniItem"
-                     onclick="votar('lula',1,'Rose')">
+<span class="name">Rose</span>
+<span class="coin">1 moeda • +1</span>
 
-                    <img
-                        class="gift"
-                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp"
-                        alt="Rose"
-                    >
-
-                    <span class="name">
-                        Rose
-                    </span>
-
-                    <span class="coin">
-                        1 moeda • +1
-                    </span>
-
-                </div>
+</div>
 
 
-                <!-- BOUQUET FLOWER -->
+<div class="miniItem" onclick="vote('lula',20,'Bouquet Flower')">
 
-                <div class="miniItem"
-                     onclick="votar('lula',20,'Bouquet Flower')">
+<img
+class="gift"
+src="https://beetgames.com/images/gifts/bouquet_flower.webp"
+alt="Bouquet Flower"
+onerror="this.onerror=null;this.src='https://beetgames.com/images/gifts/5780.webp';">
 
-                    <img
-                        class="gift"
-                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eb77ead5c3abb6da6034d3cf6cfeb438~tplv-obj.webp"
-                        alt="Bouquet Flower"
-                    >
+<span class="name">Bouquet Flower</span>
+<span class="coin">30 moedas • +20</span>
 
-                    <span class="name">
-                        Bouquet Flower
-                    </span>
+</div>
 
-                    <span class="coin">
-                        30 moedas • +20
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
+</div>
+</div>
 
 
-        <!-- FLÁVIO -->
+<div class="card">
 
-        <div class="card">
+<b>🔵 Flávio Bolsonaro</b>
 
-            <div class="card-title">
-                🔵 Flávio Bolsonaro
-            </div>
+<div class="mini">
 
-            <div class="mini">
+<div class="miniItem" onclick="vote('flavio',1,'GG')">
 
-                <!-- GG -->
+<img
+class="gift"
+src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/3f02fa9594bd1495ff4e8aa5ae265eef~tplv-obj.png"
+alt="GG">
 
-                <div class="miniItem"
-                     onclick="votar('flavio',1,'GG')">
+<span class="name">GG</span>
+<span class="coin">1 moeda • +1</span>
 
-                    <img
-                        class="gift"
-                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/3f02fa9594bd1495ff4e8aa5ae265eef~tplv-obj.png"
-                        alt="GG"
-                    >
-
-                    <span class="name">
-                        GG
-                    </span>
-
-                    <span class="coin">
-                        1 moeda • +1
-                    </span>
-
-                </div>
+</div>
 
 
-                <!-- DOUGHNUT -->
+<div class="miniItem" onclick="vote('flavio',20,'Doughnut')">
 
-                <div class="miniItem"
-                     onclick="votar('flavio',20,'Doughnut')">
+<img
+class="gift"
+src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.png"
+alt="Doughnut">
 
-                    <img
-                        class="gift"
-                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.png"
-                        alt="Doughnut"
-                    >
+<span class="name">Doughnut</span>
+<span class="coin">30 moedas • +20</span>
 
-                    <span class="name">
-                        Doughnut
-                    </span>
+</div>
 
-                    <span class="coin">
-                        30 moedas • +20
-                    </span>
+</div>
+</div>
 
-                </div>
+</div>
 
-            </div>
+<button class="reset" onclick="resetRound()">Nova rodada</button>
 
-        </div>
-
-    </div>
-
-
-    <button class="reset" onclick="resetar()">
-        Nova rodada
-    </button>
-
-    <div id="log" class="log">
-        Clique em um presente para votar.
-    </div>
+<div id="log" class="log">
+Clique em um presente para testar.
+</div>
 
 </div>
 
 
 <script>
 
-let lula = 0;
-let flavio = 0;
+let lula=0,flavio=0;
 
+function render(){
 
-function atualizar(){
+const total=lula+flavio;
 
-    const total = lula + flavio;
+let a=50,b=50;
 
-    let porcentagemLula = 50;
-    let porcentagemFlavio = 50;
+if(total){
+a=Math.round(lula/total*100);
+b=100-a;
+}
 
-    if(total > 0){
+document.getElementById('lulaSide').style.width=a+'%';
 
-        porcentagemLula =
-            Math.round((lula / total) * 100);
+document.getElementById('flavioSide').style.width=b+'%';
 
-        porcentagemFlavio =
-            100 - porcentagemLula;
-    }
+document.getElementById('lulaText').textContent='Lula '+a+'%';
 
+document.getElementById('flavioText').textContent='Flávio Bolsonaro '+b+'%';
 
-    document.getElementById("lulaSide").style.width =
-        porcentagemLula + "%";
-
-    document.getElementById("flavioSide").style.width =
-        porcentagemFlavio + "%";
-
-
-    document.getElementById("lulaText").textContent =
-        "Lula " + porcentagemLula + "%";
-
-    document.getElementById("flavioText").textContent =
-        "Flávio Bolsonaro " + porcentagemFlavio + "%";
 }
 
 
-function votar(candidato, votos, presente){
+function vote(c,v,name){
 
-    if(candidato === "lula"){
-        lula += votos;
-    }
+if(c==='lula')
+lula+=v;
+else
+flavio+=v;
 
-    if(candidato === "flavio"){
-        flavio += votos;
-    }
+render();
 
-    atualizar();
+document.getElementById('log').textContent=
+name+' → '+(c==='lula'?'Lula':'Flávio Bolsonaro')+' +'+v+' voto(s)';
 
-    const nome =
-        candidato === "lula"
-        ? "Lula"
-        : "Flávio Bolsonaro";
-
-    document.getElementById("log").textContent =
-        presente + " → " + nome + " +" + votos + " voto(s)";
 }
 
 
-function resetar(){
+function resetRound(){
 
-    lula = 0;
-    flavio = 0;
+lula=0;
+flavio=0;
 
-    atualizar();
+render();
 
-    document.getElementById("log").textContent =
-        "Nova rodada — clique em um presente para votar.";
+document.getElementById('log').textContent=
+'Nova rodada — clique em um presente para testar.';
+
 }
 
 
-atualizar();
+function connect(){
 
-</script>
+const ws=new WebSocket(
+(location.protocol==='https:'?'wss://':'ws://')+location.host
+);
 
-</body>
-</html><!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Duelo de Presentes</title>
+ws.onopen=()=>{
 
-<style>
-*{box-sizing:border-box}
+document.getElementById('status').textContent=
+'● Servidor conectado';
 
-body{
-    margin:0;
-    min-height:100vh;
-    background:#0e1015;
-    color:#fff;
-    font-family:Arial,sans-serif;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+};
+
+ws.onclose=()=>{
+
+document.getElementById('status').textContent=
+'○ Servidor desconectado — tentando novamente';
+
+setTimeout(connect,2500);
+
+};
+
+ws.onerror=()=>{};
+
+ws.onmessage=e=>{
+
+try{
+
+const d=JSON.parse(e.data);
+
+if(d.type==='status')
+return;
+
+if(d.type==='gift'){
+
+vote(
+d.candidate,
+d.votes,
+d.giftName
+);
+
+document.getElementById('log').textContent=
+'🎁 '+d.user+' enviou '+d.giftName+
+' — +'+d.votes+' voto(s)';
+
 }
 
-.game{
-    width:min(1000px,94vw);
-    text-align:center;
-}
+}catch(err){}
 
-h1{
-    font-size:clamp(26px,5vw,46px);
-    margin:0 0 8px;
-}
+};
 
-.sub{
-    opacity:.7;
-    margin:0 0 26px;
-}
-
-.bar{
-    height:90px;
-    border-radius:18px;
-    overflow:hidden;
-    display:flex;
-    background:#292c33;
-    box-shadow:0 10px 35px #0008;
-}
-
-.side{
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:800;
-    font-size:clamp(16px,3vw,30px);
-    transition:width .35s ease;
-    min-width:0;
-    overflow:hidden;
-    white-space:nowrap;
-}
-
-.red{
-    background:#d71920;
-}
-
-.blue{
-    background:#1769e0;
-}
-
-.cards{
-    display:flex;
-    gap:14px;
-    justify-content:center;
-    margin:22px auto 0;
-    flex-wrap:wrap;
-}
-
-.card{
-    width:310px;
-    background:#181b21;
-    border-radius:15px;
-    padding:14px;
-}
-
-.card-title{
-    font-weight:bold;
-    margin-bottom:12px;
-}
-
-.mini{
-    display:flex;
-    justify-content:center;
-    gap:25px;
-}
-
-.miniItem{
-    width:110px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:6px;
-    cursor:pointer;
-    user-select:none;
-    transition:.15s;
-}
-
-.miniItem:hover{
-    transform:scale(1.08);
-}
-
-.miniItem:active{
-    transform:scale(.92);
-}
-
-.gift{
-    width:65px;
-    height:65px;
-    object-fit:contain;
-}
-
-.coin{
-    font-size:11px;
-    opacity:.65;
-}
-
-.name{
-    font-size:12px;
-    font-weight:bold;
-}
-
-.reset{
-    margin-top:20px;
-    border:0;
-    border-radius:10px;
-    padding:12px 20px;
-    background:#292c34;
-    color:#fff;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.reset:hover{
-    background:#383c46;
-}
-
-.log{
-    margin-top:15px;
-    font-size:12px;
-    opacity:.55;
-    min-height:18px;
-}
-
-@media(max-width:600px){
-    .bar{
-        height:75px;
-    }
-
-    .card{
-        width:100%;
-    }
-}
-</style>
-</head>
-
-<body>
-
-<div class="game">
-
-    <h1>Quem você escolheria?</h1>
-
-    <p class="sub">
-        Clique nos presentes para testar os votos.
-    </p>
-
-    <div class="bar">
-
-        <div id="lulaSide"
-             class="side red"
-             style="width:50%">
-            <span id="lulaText">Lula 50%</span>
-        </div>
-
-        <div id="flavioSide"
-             class="side blue"
-             style="width:50%">
-            <span id="flavioText">Flávio Bolsonaro 50%</span>
-        </div>
-
-    </div>
-
-
-    <div class="cards">
-
-        <!-- LULA -->
-
-        <div class="card">
-
-            <div class="card-title">
-                🔴 Lula
-            </div>
-
-            <div class="mini">
-
-                <!-- ROSE -->
-
-                <div class="miniItem"
-                     onclick="votar('lula',1,'Rose')">
-
-                    <img
-                        class="gift"
-                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp"
-                        alt="Rose"
-                    >
-
-                    <span class="name">
-                        Rose
-                    </span>
-
-                    <span class="coin">
-                        1 moeda • +1
-                    </span>
-
-                </div>
-
-
-                <!-- BOUQUET FLOWER -->
-
-                <div class="miniItem"
-                     onclick="votar('lula',20,'Bouquet Flower')">
-
-                    <img
-                        class="gift"
-                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eb77ead5c3abb6da6034d3cf6cfeb438~tplv-obj.webp"
-                        alt="Bouquet Flower"
-                    >
-
-                    <span class="name">
-                        Bouquet Flower
-                    </span>
-
-                    <span class="coin">
-                        30 moedas • +20
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- FLÁVIO -->
-
-        <div class="card">
-
-            <div class="card-title">
-                🔵 Flávio Bolsonaro
-            </div>
-
-            <div class="mini">
-
-                <!-- GG -->
-
-                <div class="miniItem"
-                     onclick="votar('flavio',1,'GG')">
-
-                    <img
-                        class="gift"
-                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/3f02fa9594bd1495ff4e8aa5ae265eef~tplv-obj.png"
-                        alt="GG"
-                    >
-
-                    <span class="name">
-                        GG
-                    </span>
-
-                    <span class="coin">
-                        1 moeda • +1
-                    </span>
-
-                </div>
-
-
-                <!-- DOUGHNUT -->
-
-                <div class="miniItem"
-                     onclick="votar('flavio',20,'Doughnut')">
-
-                    <img
-                        class="gift"
-                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.png"
-                        alt="Doughnut"
-                    >
-
-                    <span class="name">
-                        Doughnut
-                    </span>
-
-                    <span class="coin">
-                        30 moedas • +20
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <button class="reset" onclick="resetar()">
-        Nova rodada
-    </button>
-
-    <div id="log" class="log">
-        Clique em um presente para votar.
-    </div>
-
-</div>
-
-
-<script>
-
-let lula = 0;
-let flavio = 0;
-
-
-function atualizar(){
-
-    const total = lula + flavio;
-
-    let porcentagemLula = 50;
-    let porcentagemFlavio = 50;
-
-    if(total > 0){
-
-        porcentagemLula =
-            Math.round((lula / total) * 100);
-
-        porcentagemFlavio =
-            100 - porcentagemLula;
-    }
-
-
-    document.getElementById("lulaSide").style.width =
-        porcentagemLula + "%";
-
-    document.getElementById("flavioSide").style.width =
-        porcentagemFlavio + "%";
-
-
-    document.getElementById("lulaText").textContent =
-        "Lula " + porcentagemLula + "%";
-
-    document.getElementById("flavioText").textContent =
-        "Flávio Bolsonaro " + porcentagemFlavio + "%";
 }
 
 
-function votar(candidato, votos, presente){
-
-    if(candidato === "lula"){
-        lula += votos;
-    }
-
-    if(candidato === "flavio"){
-        flavio += votos;
-    }
-
-    atualizar();
-
-    const nome =
-        candidato === "lula"
-        ? "Lula"
-        : "Flávio Bolsonaro";
-
-    document.getElementById("log").textContent =
-        presente + " → " + nome + " +" + votos + " voto(s)";
-}
-
-
-function resetar(){
-
-    lula = 0;
-    flavio = 0;
-
-    atualizar();
-
-    document.getElementById("log").textContent =
-        "Nova rodada — clique em um presente para votar.";
-}
-
-
-atualizar();
+render();
+connect();
 
 </script>
 

@@ -1,17 +1,793 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Teste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duelo de Presentes</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:#0e1015;
+    color:#fff;
+    font-family:Arial,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.game{
+    width:min(1000px,94vw);
+    text-align:center;
+}
+
+h1{
+    font-size:clamp(26px,5vw,46px);
+    margin:0 0 8px;
+}
+
+.sub{
+    opacity:.7;
+    margin:0 0 26px;
+}
+
+.bar{
+    height:90px;
+    border-radius:18px;
+    overflow:hidden;
+    display:flex;
+    background:#292c33;
+    box-shadow:0 10px 35px #0008;
+}
+
+.side{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:clamp(16px,3vw,30px);
+    transition:width .35s ease;
+    min-width:0;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.red{
+    background:#d71920;
+}
+
+.blue{
+    background:#1769e0;
+}
+
+.cards{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    margin:22px auto 0;
+    flex-wrap:wrap;
+}
+
+.card{
+    width:310px;
+    background:#181b21;
+    border-radius:15px;
+    padding:14px;
+}
+
+.card-title{
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.mini{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+}
+
+.miniItem{
+    width:110px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    cursor:pointer;
+    user-select:none;
+    transition:.15s;
+}
+
+.miniItem:hover{
+    transform:scale(1.08);
+}
+
+.miniItem:active{
+    transform:scale(.92);
+}
+
+.gift{
+    width:65px;
+    height:65px;
+    object-fit:contain;
+}
+
+.coin{
+    font-size:11px;
+    opacity:.65;
+}
+
+.name{
+    font-size:12px;
+    font-weight:bold;
+}
+
+.reset{
+    margin-top:20px;
+    border:0;
+    border-radius:10px;
+    padding:12px 20px;
+    background:#292c34;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.reset:hover{
+    background:#383c46;
+}
+
+.log{
+    margin-top:15px;
+    font-size:12px;
+    opacity:.55;
+    min-height:18px;
+}
+
+@media(max-width:600px){
+    .bar{
+        height:75px;
+    }
+
+    .card{
+        width:100%;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<h1>FUNCIONOU</h1>
+<div class="game">
 
-<button onclick="alert('Funcionou!')">
-Clique aqui
-</button>
+    <h1>Quem você escolheria?</h1>
+
+    <p class="sub">
+        Clique nos presentes para testar os votos.
+    </p>
+
+    <div class="bar">
+
+        <div id="lulaSide"
+             class="side red"
+             style="width:50%">
+            <span id="lulaText">Lula 50%</span>
+        </div>
+
+        <div id="flavioSide"
+             class="side blue"
+             style="width:50%">
+            <span id="flavioText">Flávio Bolsonaro 50%</span>
+        </div>
+
+    </div>
+
+
+    <div class="cards">
+
+        <!-- LULA -->
+
+        <div class="card">
+
+            <div class="card-title">
+                🔴 Lula
+            </div>
+
+            <div class="mini">
+
+                <!-- ROSE -->
+
+                <div class="miniItem"
+                     onclick="votar('lula',1,'Rose')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp"
+                        alt="Rose"
+                    >
+
+                    <span class="name">
+                        Rose
+                    </span>
+
+                    <span class="coin">
+                        1 moeda • +1
+                    </span>
+
+                </div>
+
+
+                <!-- BOUQUET FLOWER -->
+
+                <div class="miniItem"
+                     onclick="votar('lula',20,'Bouquet Flower')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eb77ead5c3abb6da6034d3cf6cfeb438~tplv-obj.webp"
+                        alt="Bouquet Flower"
+                    >
+
+                    <span class="name">
+                        Bouquet Flower
+                    </span>
+
+                    <span class="coin">
+                        30 moedas • +20
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FLÁVIO -->
+
+        <div class="card">
+
+            <div class="card-title">
+                🔵 Flávio Bolsonaro
+            </div>
+
+            <div class="mini">
+
+                <!-- GG -->
+
+                <div class="miniItem"
+                     onclick="votar('flavio',1,'GG')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/3f02fa9594bd1495ff4e8aa5ae265eef~tplv-obj.png"
+                        alt="GG"
+                    >
+
+                    <span class="name">
+                        GG
+                    </span>
+
+                    <span class="coin">
+                        1 moeda • +1
+                    </span>
+
+                </div>
+
+
+                <!-- DOUGHNUT -->
+
+                <div class="miniItem"
+                     onclick="votar('flavio',20,'Doughnut')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.png"
+                        alt="Doughnut"
+                    >
+
+                    <span class="name">
+                        Doughnut
+                    </span>
+
+                    <span class="coin">
+                        30 moedas • +20
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <button class="reset" onclick="resetar()">
+        Nova rodada
+    </button>
+
+    <div id="log" class="log">
+        Clique em um presente para votar.
+    </div>
+
+</div>
+
+
+<script>
+
+let lula = 0;
+let flavio = 0;
+
+
+function atualizar(){
+
+    const total = lula + flavio;
+
+    let porcentagemLula = 50;
+    let porcentagemFlavio = 50;
+
+    if(total > 0){
+
+        porcentagemLula =
+            Math.round((lula / total) * 100);
+
+        porcentagemFlavio =
+            100 - porcentagemLula;
+    }
+
+
+    document.getElementById("lulaSide").style.width =
+        porcentagemLula + "%";
+
+    document.getElementById("flavioSide").style.width =
+        porcentagemFlavio + "%";
+
+
+    document.getElementById("lulaText").textContent =
+        "Lula " + porcentagemLula + "%";
+
+    document.getElementById("flavioText").textContent =
+        "Flávio Bolsonaro " + porcentagemFlavio + "%";
+}
+
+
+function votar(candidato, votos, presente){
+
+    if(candidato === "lula"){
+        lula += votos;
+    }
+
+    if(candidato === "flavio"){
+        flavio += votos;
+    }
+
+    atualizar();
+
+    const nome =
+        candidato === "lula"
+        ? "Lula"
+        : "Flávio Bolsonaro";
+
+    document.getElementById("log").textContent =
+        presente + " → " + nome + " +" + votos + " voto(s)";
+}
+
+
+function resetar(){
+
+    lula = 0;
+    flavio = 0;
+
+    atualizar();
+
+    document.getElementById("log").textContent =
+        "Nova rodada — clique em um presente para votar.";
+}
+
+
+atualizar();
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duelo de Presentes</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:#0e1015;
+    color:#fff;
+    font-family:Arial,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.game{
+    width:min(1000px,94vw);
+    text-align:center;
+}
+
+h1{
+    font-size:clamp(26px,5vw,46px);
+    margin:0 0 8px;
+}
+
+.sub{
+    opacity:.7;
+    margin:0 0 26px;
+}
+
+.bar{
+    height:90px;
+    border-radius:18px;
+    overflow:hidden;
+    display:flex;
+    background:#292c33;
+    box-shadow:0 10px 35px #0008;
+}
+
+.side{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:clamp(16px,3vw,30px);
+    transition:width .35s ease;
+    min-width:0;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.red{
+    background:#d71920;
+}
+
+.blue{
+    background:#1769e0;
+}
+
+.cards{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    margin:22px auto 0;
+    flex-wrap:wrap;
+}
+
+.card{
+    width:310px;
+    background:#181b21;
+    border-radius:15px;
+    padding:14px;
+}
+
+.card-title{
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.mini{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+}
+
+.miniItem{
+    width:110px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    cursor:pointer;
+    user-select:none;
+    transition:.15s;
+}
+
+.miniItem:hover{
+    transform:scale(1.08);
+}
+
+.miniItem:active{
+    transform:scale(.92);
+}
+
+.gift{
+    width:65px;
+    height:65px;
+    object-fit:contain;
+}
+
+.coin{
+    font-size:11px;
+    opacity:.65;
+}
+
+.name{
+    font-size:12px;
+    font-weight:bold;
+}
+
+.reset{
+    margin-top:20px;
+    border:0;
+    border-radius:10px;
+    padding:12px 20px;
+    background:#292c34;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.reset:hover{
+    background:#383c46;
+}
+
+.log{
+    margin-top:15px;
+    font-size:12px;
+    opacity:.55;
+    min-height:18px;
+}
+
+@media(max-width:600px){
+    .bar{
+        height:75px;
+    }
+
+    .card{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <h1>Quem você escolheria?</h1>
+
+    <p class="sub">
+        Clique nos presentes para testar os votos.
+    </p>
+
+    <div class="bar">
+
+        <div id="lulaSide"
+             class="side red"
+             style="width:50%">
+            <span id="lulaText">Lula 50%</span>
+        </div>
+
+        <div id="flavioSide"
+             class="side blue"
+             style="width:50%">
+            <span id="flavioText">Flávio Bolsonaro 50%</span>
+        </div>
+
+    </div>
+
+
+    <div class="cards">
+
+        <!-- LULA -->
+
+        <div class="card">
+
+            <div class="card-title">
+                🔴 Lula
+            </div>
+
+            <div class="mini">
+
+                <!-- ROSE -->
+
+                <div class="miniItem"
+                     onclick="votar('lula',1,'Rose')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp"
+                        alt="Rose"
+                    >
+
+                    <span class="name">
+                        Rose
+                    </span>
+
+                    <span class="coin">
+                        1 moeda • +1
+                    </span>
+
+                </div>
+
+
+                <!-- BOUQUET FLOWER -->
+
+                <div class="miniItem"
+                     onclick="votar('lula',20,'Bouquet Flower')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eb77ead5c3abb6da6034d3cf6cfeb438~tplv-obj.webp"
+                        alt="Bouquet Flower"
+                    >
+
+                    <span class="name">
+                        Bouquet Flower
+                    </span>
+
+                    <span class="coin">
+                        30 moedas • +20
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FLÁVIO -->
+
+        <div class="card">
+
+            <div class="card-title">
+                🔵 Flávio Bolsonaro
+            </div>
+
+            <div class="mini">
+
+                <!-- GG -->
+
+                <div class="miniItem"
+                     onclick="votar('flavio',1,'GG')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/3f02fa9594bd1495ff4e8aa5ae265eef~tplv-obj.png"
+                        alt="GG"
+                    >
+
+                    <span class="name">
+                        GG
+                    </span>
+
+                    <span class="coin">
+                        1 moeda • +1
+                    </span>
+
+                </div>
+
+
+                <!-- DOUGHNUT -->
+
+                <div class="miniItem"
+                     onclick="votar('flavio',20,'Doughnut')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.png"
+                        alt="Doughnut"
+                    >
+
+                    <span class="name">
+                        Doughnut
+                    </span>
+
+                    <span class="coin">
+                        30 moedas • +20
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <button class="reset" onclick="resetar()">
+        Nova rodada
+    </button>
+
+    <div id="log" class="log">
+        Clique em um presente para votar.
+    </div>
+
+</div>
+
+
+<script>
+
+let lula = 0;
+let flavio = 0;
+
+
+function atualizar(){
+
+    const total = lula + flavio;
+
+    let porcentagemLula = 50;
+    let porcentagemFlavio = 50;
+
+    if(total > 0){
+
+        porcentagemLula =
+            Math.round((lula / total) * 100);
+
+        porcentagemFlavio =
+            100 - porcentagemLula;
+    }
+
+
+    document.getElementById("lulaSide").style.width =
+        porcentagemLula + "%";
+
+    document.getElementById("flavioSide").style.width =
+        porcentagemFlavio + "%";
+
+
+    document.getElementById("lulaText").textContent =
+        "Lula " + porcentagemLula + "%";
+
+    document.getElementById("flavioText").textContent =
+        "Flávio Bolsonaro " + porcentagemFlavio + "%";
+}
+
+
+function votar(candidato, votos, presente){
+
+    if(candidato === "lula"){
+        lula += votos;
+    }
+
+    if(candidato === "flavio"){
+        flavio += votos;
+    }
+
+    atualizar();
+
+    const nome =
+        candidato === "lula"
+        ? "Lula"
+        : "Flávio Bolsonaro";
+
+    document.getElementById("log").textContent =
+        presente + " → " + nome + " +" + votos + " voto(s)";
+}
+
+
+function resetar(){
+
+    lula = 0;
+    flavio = 0;
+
+    atualizar();
+
+    document.getElementById("log").textContent =
+        "Nova rodada — clique em um presente para votar.";
+}
+
+
+atualizar();
+
+</script>
 
 </body>
 </html>

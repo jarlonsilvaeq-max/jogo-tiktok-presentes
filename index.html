@@ -1,1115 +1,404 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Duelo de Presentes — TikTok LIVE</title>
+<title>Duelo de Presentes</title>
 
 <style>
-
 *{
-box-sizing:border-box
+    box-sizing:border-box;
 }
 
 body{
-margin:0;
-min-height:100vh;
-background:#0e1015;
-color:#fff;
-font-family:Arial,sans-serif;
-display:flex;
-align-items:center;
-justify-content:center
+    margin:0;
+    min-height:100vh;
+    background:#0e1015;
+    color:#fff;
+    font-family:Arial,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .game{
-width:min(900px,94vw);
-text-align:center
-}
-
-.status{
-font-size:12px;
-opacity:.55;
-margin-bottom:12px
+    width:min(1000px,94vw);
+    text-align:center;
 }
 
 h1{
-font-size:clamp(25px,5vw,42px);
-margin:0 0 7px
+    font-size:clamp(26px,5vw,46px);
+    margin:0 0 8px;
 }
 
 .sub{
-font-size:13px;
-opacity:.55;
-margin:0 0 22px
+    opacity:.7;
+    margin:0 0 26px;
 }
 
-
-/* RESULTADO */
-
 .bar{
-height:72px;
-border-radius:14px;
-overflow:hidden;
-display:flex;
-background:#292c33;
-box-shadow:0 8px 25px #0007
+    height:90px;
+    border-radius:18px;
+    overflow:hidden;
+    display:flex;
+    background:#292c33;
+    box-shadow:0 10px 35px #0008;
 }
 
 .side{
-height:100%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:800;
-font-size:clamp(16px,2.8vw,25px);
-transition:width .35s;
-min-width:0;
-white-space:nowrap
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:clamp(16px,3vw,30px);
+    transition:width .35s ease;
+    min-width:0;
+    overflow:hidden;
+    white-space:nowrap;
 }
 
 .red{
-background:#d71920
+    background:#d71920;
 }
 
 .blue{
-background:#1769e0
+    background:#1769e0;
 }
 
-
-/* CARDS */
-
 .cards{
-display:flex;
-gap:10px;
-justify-content:center;
-margin:18px auto 0;
-flex-wrap:wrap
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    margin:22px auto 0;
+    flex-wrap:wrap;
 }
 
 .card{
-width:260px;
-background:#181b21;
-border-radius:12px;
-padding:10px 12px
+    width:310px;
+    background:#181b21;
+    border-radius:15px;
+    padding:14px;
 }
 
-.card b{
-display:block;
-font-size:14px;
-margin-bottom:8px
+.card-title{
+    font-weight:bold;
+    margin-bottom:12px;
 }
 
 .mini{
-display:flex;
-justify-content:center;
-gap:24px
+    display:flex;
+    justify-content:center;
+    gap:25px;
 }
 
-
-/* PRESENTES CLICÁVEIS */
-
 .miniItem{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:3px;
-cursor:pointer;
-user-select:none;
-border-radius:10px;
-padding:5px;
-transition:.15s
+    width:100px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    cursor:pointer;
+    user-select:none;
+    transition:.15s;
 }
 
 .miniItem:hover{
-background:#252832;
-transform:scale(1.06)
+    transform:scale(1.08);
 }
 
 .miniItem:active{
-transform:scale(.90)
+    transform:scale(.92);
 }
 
 .gift{
-width:48px;
-height:48px;
-object-fit:contain;
-pointer-events:none
-}
-
-.giftName{
-font-size:10px;
-opacity:.75
+    width:65px;
+    height:65px;
+    object-fit:contain;
 }
 
 .coin{
-font-size:9px;
-opacity:.5
+    font-size:11px;
+    opacity:.65;
 }
 
-
-/* BOTÃO */
+.name{
+    font-size:12px;
+    font-weight:bold;
+}
 
 .reset{
-margin-top:15px;
-border:0;
-border-radius:8px;
-padding:9px 15px;
-background:#292c34;
-color:#fff;
-font-size:12px;
-font-weight:bold;
-cursor:pointer
+    margin-top:20px;
+    border:0;
+    border-radius:10px;
+    padding:12px 20px;
+    background:#292c34;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
 }
 
 .reset:hover{
-background:#353944
+    background:#383c46;
 }
-
-
-/* LOG */
 
 .log{
-margin-top:11px;
-font-size:11px;
-opacity:.5;
-min-height:14px
+    margin-top:15px;
+    font-size:12px;
+    opacity:.55;
+    min-height:18px;
 }
 
+@media(max-width:600px){
+    .bar{
+        height:75px;
+    }
 
-/* ANIMAÇÃO */
+    .card{
+        width:100%;
+    }
 
-@keyframes pulseGift{
-
-0%{
-transform:scale(1)
+    .miniItem{
+        width:85px;
+    }
 }
-
-50%{
-transform:scale(1.28)
-}
-
-100%{
-transform:scale(1)
-}
-
-}
-
-.pulse{
-animation:pulseGift .28s ease
-}
-
 </style>
-
 </head>
 
 <body>
 
 <div class="game">
 
+    <h1>Quem você escolheria?</h1>
 
-<div id="status" class="status">
-Aguardando conexão com o servidor…
-</div>
+    <p class="sub">
+        Clique nos presentes para testar os votos.
+    </p>
 
+    <div class="bar">
 
-<h1>
-Quem você escolheria?
-</h1>
+        <div id="lulaSide"
+             class="side red"
+             style="width:50%">
+            <span id="lulaText">Lula 50%</span>
+        </div>
 
+        <div id="flavioSide"
+             class="side blue"
+             style="width:50%">
+            <span id="flavioText">Flávio Bolsonaro 50%</span>
+        </div>
 
-<p class="sub">
-Presentes da LIVE viram votos.
-</p>
+    </div>
 
 
-<!-- RESULTADO -->
+    <div class="cards">
 
-<div class="bar">
+        <!-- LULA -->
 
-<div
-id="l"
-class="side red"
-style="width:50%"
->
+        <div class="card">
 
-<span>
-Lula 50%
-</span>
+            <div class="card-title">
+                🔴 Lula
+            </div>
 
-</div>
+            <div class="mini">
 
+                <!-- ROSE -->
 
-<div
-id="f"
-class="side blue"
-style="width:50%"
->
+                <div class="miniItem"
+                     onclick="votar('lula',1,'Rose')">
 
-<span>
-Flávio Bolsonaro 50%
-</span>
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp"
+                        alt="Rose"
+                    >
 
-</div>
+                    <span class="name">Rose</span>
 
-</div>
+                    <span class="coin">
+                        1 moeda • +1
+                    </span>
 
+                </div>
 
-<!-- PRESENTES -->
 
-<div class="cards">
+                <!-- BOUQUET FLOWER -->
 
+                <div class="miniItem"
+                     onclick="votar('lula',20,'Bouquet Flower')">
 
-<!-- LULA -->
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/resource/7c1b3e2c9e0f5f2f6c7a5c3a0d4b6e2f.png~tplv-obj.webp"
+                        alt="Bouquet Flower"
+                    >
 
-<div class="card">
+                    <span class="name">
+                        Bouquet Flower
+                    </span>
 
-<b>
-🔴 Lula
-</b>
+                    <span class="coin">
+                        30 moedas • +20
+                    </span>
 
+                </div>
 
-<div class="mini">
+            </div>
 
+        </div>
 
-<!-- ROSE -->
 
-<div
-class="miniItem"
-onclick="testGift('rose')"
-title="Clique para testar Rose"
->
+        <!-- FLÁVIO -->
 
-<img
-id="cardL1"
-class="gift"
-src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp"
-alt="Rose"
->
+        <div class="card">
 
-<span class="giftName">
-Rose
-</span>
+            <div class="card-title">
+                🔵 Flávio Bolsonaro
+            </div>
 
-<span class="coin">
-1 moeda • 1 voto
-</span>
+            <div class="mini">
 
-</div>
+                <!-- GG -->
 
+                <div class="miniItem"
+                     onclick="votar('flavio',1,'GG')">
 
-<!-- BOUQUET FLOWER -->
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/3f02fa9594bd1495ff4e8aa5ae265eef~tplv-obj.png"
+                        alt="GG"
+                    >
 
-<div
-class="miniItem"
-onclick="testGift('bouquet')"
-title="Clique para testar Bouquet Flower"
->
+                    <span class="name">
+                        GG
+                    </span>
 
-<img
-id="cardL20"
-class="gift"
-src="https://beetgames.com/images/gifts/bouquet_flower.webp"
-alt="Bouquet Flower"
->
+                    <span class="coin">
+                        1 moeda • +1
+                    </span>
 
-<span class="giftName">
-Bouquet Flower
-</span>
+                </div>
 
-<span class="coin">
-30 moedas • 20 votos
-</span>
 
-</div>
+                <!-- DOUGHNUT -->
 
+                <div class="miniItem"
+                     onclick="votar('flavio',20,'Doughnut')">
 
-</div>
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.png"
+                        alt="Doughnut"
+                    >
 
-</div>
+                    <span class="name">
+                        Doughnut
+                    </span>
 
+                    <span class="coin">
+                        30 moedas • +20
+                    </span>
 
-<!-- FLÁVIO -->
+                </div>
 
-<div class="card">
+            </div>
 
-<b>
-🔵 Flávio Bolsonaro
-</b>
+        </div>
 
+    </div>
 
-<div class="mini">
 
+    <button class="reset" onclick="resetar()">
+        Nova rodada
+    </button>
 
-<!-- FIRE -->
-
-<div
-class="miniItem"
-onclick="testGift('fire')"
-title="Clique para testar Fire"
->
-
-<img
-id="cardF1"
-class="gift"
-src="https://beetgames.com/images/gifts/fire.webp"
-alt="Fire"
->
-
-<span class="giftName">
-Fire
-</span>
-
-<span class="coin">
-1 moeda • 1 voto
-</span>
-
-</div>
-
-
-<!-- DOUGHNUT -->
-
-<div
-class="miniItem"
-onclick="testGift('doughnut')"
-title="Clique para testar Doughnut"
->
-
-<img
-id="cardF20"
-class="gift"
-src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.webp"
-alt="Doughnut"
->
-
-<span class="giftName">
-Doughnut
-</span>
-
-<span class="coin">
-30 moedas • 20 votos
-</span>
-
-</div>
-
-
-</div>
-
-</div>
-
-</div>
-
-
-<button
-class="reset"
-onclick="reset()"
->
-Nova rodada
-</button>
-
-
-<div
-id="log"
-class="log"
->
-Clique em um presente para testar ou aguarde a LIVE…
-</div>
-
+    <div id="log" class="log">
+        Clique em um presente para votar.
+    </div>
 
 </div>
 
 
 <script>
 
-
-/* =========================================
-   PONTUAÇÃO
-========================================= */
-
-let p=50;
+let lula = 0;
+let flavio = 0;
 
 
-/* =========================================
-   IDs CONHECIDOS
-========================================= */
+function atualizar(){
 
-const GIFT_IDS={
+    const total = lula + flavio;
 
-rose:5655,
+    let porcentagemLula = 50;
+    let porcentagemFlavio = 50;
 
-bouquet:5780,
+    if(total > 0){
 
-doughnut:5879
+        porcentagemLula =
+            Math.round((lula / total) * 100);
 
-};
-
-
-/* =========================================
-   RENDER
-========================================= */
-
-function render(){
-
-p=Math.max(0,Math.min(100,p));
-
-const q=100-p;
+        porcentagemFlavio =
+            100 - porcentagemLula;
+    }
 
 
-document.getElementById("l").style.width=
-p+"%";
+    document.getElementById("lulaSide").style.width =
+        porcentagemLula + "%";
+
+    document.getElementById("flavioSide").style.width =
+        porcentagemFlavio + "%";
 
 
-document.getElementById("f").style.width=
-q+"%";
+    document.getElementById("lulaText").textContent =
+        "Lula " + porcentagemLula + "%";
 
-
-document.querySelector("#l span").textContent=
-"Lula "+p+"%";
-
-
-document.querySelector("#f span").textContent=
-"Flávio Bolsonaro "+q+"%";
-
+    document.getElementById("flavioText").textContent =
+        "Flávio Bolsonaro " + porcentagemFlavio + "%";
 }
 
 
-/* =========================================
-   VOTO
-========================================= */
+function votar(candidato, votos, presente){
 
-function vote(candidate,votes){
+    if(candidato === "lula"){
+        lula += votos;
+    }
 
-votes=Number(votes)||0;
+    if(candidato === "flavio"){
+        flavio += votos;
+    }
 
-if(votes<=0)return;
+    atualizar();
 
 
-if(candidate==="lula"){
+    const nome =
+        candidato === "lula"
+        ? "Lula"
+        : "Flávio Bolsonaro";
 
-p+=votes;
 
-}else{
-
-p-=votes;
-
+    document.getElementById("log").textContent =
+        presente + " → " + nome + " +" + votos + " voto(s)";
 }
 
 
-render();
+function resetar(){
 
+    lula = 0;
+    flavio = 0;
+
+    atualizar();
+
+    document.getElementById("log").textContent =
+        "Nova rodada — clique em um presente para votar.";
 }
 
 
-/* =========================================
-   TESTE PELO PRÓPRIO ÍCONE
-========================================= */
+atualizar();
 
-function testGift(type){
+</script>
 
-const gifts={
-
-rose:{
-candidate:"lula",
-votes:1,
-name:"Rose",
-id:"cardL1"
-},
-
-fire:{
-candidate:"flavio",
-votes:1,
-name:"Fire",
-id:"cardF1"
-},
-
-bouquet:{
-candidate:"lula",
-votes:20,
-name:"Bouquet Flower",
-id:"cardL20"
-},
-
-doughnut:{
-candidate:"flavio",
-votes:20,
-name:"Doughnut",
-id:"cardF20"
-}
-
-};
-
-
-const gift=gifts[type];
-
-if(!gift)return;
-
-
-/* adiciona voto */
-
-vote(
-gift.candidate,
-gift.votes
-);
-
-
-/* anima ícone */
-
-const img=
-document.getElementById(gift.id);
-
-if(img){
-
-img.classList.remove("pulse");
-
-void img.offsetWidth;
-
-img.classList.add("pulse");
-
-}
-
-
-/* mostra teste */
-
-document.getElementById("log").textContent=
-"Teste: "+
-gift.name+
-" → +"+
-gift.votes+
-" voto(s)";
-
-}
-
-
-/* =========================================
-   NORMALIZA EVENTO
-========================================= */
-
-function normalizeGiftEvent(raw){
-
-if(!raw)return null;
-
-
-/*
-Alguns servidores mandam:
-
-{
- type:"gift",
- giftName:"Fire"
-}
-
-Outros mandam:
-
-{
- type:"gift",
- data:{
-   giftName:"Fire"
- }
-}
-*/
-
-let d=raw;
-
-
-/* Se estiver dentro de data */
-
-if(
-raw.data &&
-typeof raw.data==="object" &&
-!Array.isArray(raw.data)
-){
-
-d={
-...raw,
-...raw.data
-};
-
-}
-
-
-/* Alguns servidores usam event */
-
-if(
-d.event &&
-!d.type
-){
-
-d.type=d.event;
-
-}
-
-
-return d;
-
-}
-
-
-/* =========================================
-   IDENTIFICAR PRESENTE
-========================================= */
-
-function identifyGift(raw){
-
-const d=normalizeGiftEvent(raw);
-
-if(!d)return null;
-
-
-/* NOME */
-
-let name="";
-
-
-if(typeof d.giftName==="string"){
-
-name=d.giftName;
-
-}else if(typeof d.gift_name==="string"){
-
-name=d.gift_name;
-
-}else if(typeof d.name==="string"){
-
-name=d.name;
-
-}else if(
-d.gift &&
-typeof d.gift==="object" &&
-typeof d.gift.name==="string"
-){
-
-name=d.gift.name;
-
-}
-
-
-name=String(name)
-.toLowerCase()
-.trim();
-
-
-/* ID */
-
-let id=Number(
-d.giftId ||
-d.gift_id ||
-d.giftID ||
-(
-d.gift &&
-typeof d.gift==="object"
-?
-d.gift.gift_id || d.gift.id
-:
-0
-) ||
-0
-);
-
-
-/* =========================================
-   ROSE
-   1 MOEDA = 1 VOTO
-========================================= */
-
-if(
-
-id===5655 ||
-
-name==="rose" ||
-
-name==="rosa"
-
-){
-
-return{
-
-candidate:"lula",
-
-votes:1,
-
-card:"cardL1",
-
-label:"Rose",
-
-type:"rose"
-
-};
-
-}
-
-
-/* =========================================
-   BOUQUET FLOWER
-   30 MOEDAS = 20 VOTOS
-========================================= */
-
-if(
-
-id===5780 ||
-
-name==="bouquet flower" ||
-
-name==="bouquetflower" ||
-
-name==="bouquet" ||
-
-name.includes("bouquet")
-
-){
-
-return{
-
-candidate:"lula",
-
-votes:20,
-
-card:"cardL20",
-
-label:"Bouquet Flower",
-
-type:"bouquet"
-
-};
-
-}
-
-
-/* =========================================
-   DOUGHNUT
-   30 MOEDAS = 20 VOTOS
-========================================= */
-
-if(
-
-id===5879 ||
-
-name==="doughnut" ||
-
-name==="donut" ||
-
-name.includes("doughnut") ||
-
-name.includes("donut")
-
-){
-
-return{
-
-candidate:"flavio",
-
-votes:20,
-
-card:"cardF20",
-
-label:"Doughnut",
-
-type:"doughnut"
-
-};
-
-}
-
-
-/* =========================================
-   FIRE
-   1 MOEDA = 1 VOTO
-========================================= */
-
-if(
-
-name==="fire" ||
-
-name==="fogo" ||
-
-name.includes("fire") ||
-
-name.includes("fogo")
-
-){
-
-return{
-
-candidate:"flavio",
-
-votes:1,
-
-card:"cardF1",
-
-label:"Fire",
-
-type:"fire"
-
-};
-
-}
-
-
-/* =========================================
-   NÃO RECONHECIDO
-========================================= */
-
-return null;
-
-}
-
-
-/* =========================================
-   CONTROLE DE COMBOS
-========================================= */
-
-function processGift(raw){
-
-const d=normalizeGiftEvent(raw);
-
-if(!d)return;
-
-
-/* identifica */
-
-const gift=identifyGift(d);
-
-if(!gift){
-
-console.log(
-"⚠️ Presente não reconhecido:",
-d
-);
-
-const unknownName=
-d.giftName ||
-d.gift_name ||
-d.name ||
-(
-d.gift &&
-d.gift.name
-) ||
-"desconhecido";
-
-
-document.getElementById("log").textContent=
-"Presente não reconhecido: "+
-unknownName;
-
-return;
-
-}
-
-
-/* =========================================
-   REPEAT COUNT
-========================================= */
-
-let repeatCount=Number(
-
-d.repeatCount ||
-
-d.repeat_count ||
-
-(
-d.gift &&
-d.gift.repeat_count
-) ||
-
-1
-
-);
-
-if(!repeatCount || repeatCount<1){
-
-repeatCount=1;
-
-}
-
-
-/* =========================================
-   REPEAT END
-========================================= */
-
-const repeatEnd=
-
-d.repeatEnd === true ||
-
-d.repeatEnd === 1 ||
-
-d.repeat_end === true ||
-
-d.repeat_end === 1;
-
-
-/*
-Se for presente de combo e ainda
-não terminou, não soma novamente.
-
-Quando chegar o final, usamos
-o repeatCount total.
-*/
-
-const giftType=Number(
-
-d.giftType ||
-
-d.gift_type ||
-
-(
-d.gift &&
-d.gift.gift_type
-) ||
-
-0
-
-);
-
-
-/*
-Tipo 1 normalmente representa
-presente que pode formar combo.
-*/
-
-if(
-giftType===1 &&
-d.repeatEnd !== undefined &&
-!repeatEnd
-){
-
-console.log(
-"Combo intermediário ignorado:",
-gift.label,
-repeatCount
-);
-
-return;
-
-}
-
-
-/* =========================================
-   VOTOS FINAIS
-========================================= */
-
-const totalVotes=
-gift.votes * repeatCount;
-
-
-/* =========================================
-   REGISTRA
-========================================= */
-
-vote(
-gift.candidate,
-totalVotes
-);
-
-
-/* =========================================
-   ATUALIZA ÍCONE
-========================================= */
-
-const icon=
-
-d.icon ||
-
-d.giftPictureUrl ||
-
-d.giftImageUrl ||
-
-d.giftIcon ||
-
-d.iconUrl ||
-
-d.gift_image ||
-
-d.giftImage ||
-
-(
-d.gift &&
-(
-d.gift.icon ||
-d.gift.image ||
-d.giftPictureUrl
-)
-);
-
-
-if(icon){
-
-const img=
-document.getElementById(gift.card);
-
-if(img){
-
-img.src=icon;
-
-}
-
-}
-
-
-/* =========================================
-   USUÁRIO
-========================================= */
-
-let user="Usuário";
-
-
-if(
-d.user &&
-typeof d.user==="object"
-){
-
-user=
-d.user.uniqueId ||
-d.user.unique_id ||
-d.user.nickname ||
-d.user.name ||
-"Usuário";
-
-}else if(typeof d.user==="string"){
-
-user=d.user;
-
-}else{
-
-user=
-d.uniqueId ||
-d.unique_id ||
-d.username ||
-d.userName ||
-"Usuário";
-
-}
-
-
-/* =========================================
-   LOG
-========================================= */
-
-document.getElementById("log").textContent=
-
-"🎁 "+
-user+
-" enviou "+
-gift.label+
-" x"+
-repeatCount+
-" — "+
-totalVotes+
-" voto(s)";
-
-
-console.log(
-"✅ PRESENTE:",
-gift.label,
-"| usuário:",
-user,
-"| quantidade:",
-repeatCount,
-"| votos:",
-totalVotes
-);
-
-}
-
-
-/* =========================================
-   WE
+</body>
+</html>

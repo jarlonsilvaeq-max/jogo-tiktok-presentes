@@ -171,4 +171,227 @@ h1{
 
     <div class="bar">
 
-        <
+        <div id="lulaSide"
+             class="side red"
+             style="width:50%">
+            <span id="lulaText">Lula 50%</span>
+        </div>
+
+        <div id="flavioSide"
+             class="side blue"
+             style="width:50%">
+            <span id="flavioText">Flávio Bolsonaro 50%</span>
+        </div>
+
+    </div>
+
+
+    <div class="cards">
+
+        <!-- LULA -->
+
+        <div class="card">
+
+            <div class="card-title">
+                🔴 Lula
+            </div>
+
+            <div class="mini">
+
+                <!-- ROSE -->
+
+                <div class="miniItem"
+                     onclick="votar('lula',1,'Rose')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp"
+                        alt="Rose"
+                    >
+
+                    <span class="name">
+                        Rose
+                    </span>
+
+                    <span class="coin">
+                        1 moeda • +1
+                    </span>
+
+                </div>
+
+
+                <!-- BOUQUET FLOWER -->
+
+                <div class="miniItem"
+                     onclick="votar('lula',20,'Bouquet Flower')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eb77ead5c3abb6da6034d3cf6cfeb438~tplv-obj.webp"
+                        alt="Bouquet Flower"
+                    >
+
+                    <span class="name">
+                        Bouquet Flower
+                    </span>
+
+                    <span class="coin">
+                        30 moedas • +20
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FLÁVIO -->
+
+        <div class="card">
+
+            <div class="card-title">
+                🔵 Flávio Bolsonaro
+            </div>
+
+            <div class="mini">
+
+                <!-- GG -->
+
+                <div class="miniItem"
+                     onclick="votar('flavio',1,'GG')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/3f02fa9594bd1495ff4e8aa5ae265eef~tplv-obj.png"
+                        alt="GG"
+                    >
+
+                    <span class="name">
+                        GG
+                    </span>
+
+                    <span class="coin">
+                        1 moeda • +1
+                    </span>
+
+                </div>
+
+
+                <!-- DOUGHNUT -->
+
+                <div class="miniItem"
+                     onclick="votar('flavio',20,'Doughnut')">
+
+                    <img
+                        class="gift"
+                        src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.png"
+                        alt="Doughnut"
+                    >
+
+                    <span class="name">
+                        Doughnut
+                    </span>
+
+                    <span class="coin">
+                        30 moedas • +20
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <button class="reset" onclick="resetar()">
+        Nova rodada
+    </button>
+
+    <div id="log" class="log">
+        Clique em um presente para votar.
+    </div>
+
+</div>
+
+
+<script>
+
+let lula = 0;
+let flavio = 0;
+
+
+function atualizar(){
+
+    const total = lula + flavio;
+
+    let porcentagemLula = 50;
+    let porcentagemFlavio = 50;
+
+    if(total > 0){
+
+        porcentagemLula =
+            Math.round((lula / total) * 100);
+
+        porcentagemFlavio =
+            100 - porcentagemLula;
+    }
+
+
+    document.getElementById("lulaSide").style.width =
+        porcentagemLula + "%";
+
+    document.getElementById("flavioSide").style.width =
+        porcentagemFlavio + "%";
+
+
+    document.getElementById("lulaText").textContent =
+        "Lula " + porcentagemLula + "%";
+
+    document.getElementById("flavioText").textContent =
+        "Flávio Bolsonaro " + porcentagemFlavio + "%";
+}
+
+
+function votar(candidato, votos, presente){
+
+    if(candidato === "lula"){
+        lula += votos;
+    }
+
+    if(candidato === "flavio"){
+        flavio += votos;
+    }
+
+    atualizar();
+
+    const nome =
+        candidato === "lula"
+        ? "Lula"
+        : "Flávio Bolsonaro";
+
+    document.getElementById("log").textContent =
+        presente + " → " + nome + " +" + votos + " voto(s)";
+}
+
+
+function resetar(){
+
+    lula = 0;
+    flavio = 0;
+
+    atualizar();
+
+    document.getElementById("log").textContent =
+        "Nova rodada — clique em um presente para votar.";
+}
+
+
+atualizar();
+
+</script>
+
+</body>
+</html>
